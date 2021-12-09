@@ -31,18 +31,16 @@ def map_right_to_left(wiring, top_letter, input_index):
     """Find rotor's left side output index.
     top_letter is the visible by an operator rotor's offset indication."""
     offset = find_alphabet_index(top_letter)
-    input_index_offset = (input_index + offset)%26
-    output_letter = wiring[input_index_offset]
+    input_offset_index = (input_index + offset)%26
+    output_letter = wiring[input_offset_index]
     output_index = find_alphabet_index(output_letter)
 
     return output_index
+
 def map_left_to_right(wiring, top_letter, input_index):
     """Find rotor's right side output index.
     top_letter is the visible by an operator rotor's offset indication."""
-    offset = find_alphabet_index(top_letter)
-    input_letter = find_alphabet_letter(input_index)
-    output_index_offset = wiring.find(input_letter)
-    output_index = (output_index_offset - offset)%26
+    pass
 
     return output_index
 class IncorrectAlphabetLetterError(Exception):

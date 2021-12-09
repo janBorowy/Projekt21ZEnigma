@@ -42,11 +42,13 @@ def test_find_alphabet_letter():
 
 def test_map_right_to_left():
     rotor_wiring_A = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    assert map_right_to_left(rotor_wiring_A, "A", 0) == 4
-    assert map_right_to_left(rotor_wiring_A, "B", 0) == 10
+    rotor_wiring_B = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+    assert map_right_to_left(rotor_wiring_A, "J", 25) == 21
+    assert map_right_to_left(rotor_wiring_A, "R", 4) == 8
+    assert map_right_to_left(rotor_wiring_A, "Y", 0) == 2
+    assert map_right_to_left(rotor_wiring_B, "O", 14) == 5
 
 def test_map_left_to_right():
     rotor_wiring_A = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    assert map_left_to_right(rotor_wiring_A, "A", 4) == 0
-    assert map_left_to_right(rotor_wiring_A, "B", 10) == 0
-    assert map_left_to_right(rotor_wiring_A, "F", 10) == 14
+    #assert map_left_to_right(rotor_wiring_A, "J", 21) == 25
+    assert map_left_to_right(rotor_wiring_A, "R", 8) == 4
