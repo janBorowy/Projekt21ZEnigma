@@ -1,5 +1,12 @@
-from enigma import IncorrectAlphabetLetterError, check_index, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_right_to_left
+from enigma import IncorrectAlphabetLetterError, check_index, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_reflector, map_right_to_left
 import pytest
+
+#specyfikacje z modelu Enigma I (1930)
+rotor_wiring_A = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+rotor_wiring_B = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+rotor_wiring_C = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+
+reflector_map = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 
 def test_check_index():
     check_index(5)
@@ -41,14 +48,28 @@ def test_find_alphabet_letter():
     assert find_alphabet_letter(9) == "J"
 
 def test_map_right_to_left():
-    rotor_wiring_A = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor_wiring_B = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
-    assert map_right_to_left(rotor_wiring_A, "J", 25) == 21
-    assert map_right_to_left(rotor_wiring_A, "R", 4) == 8
-    assert map_right_to_left(rotor_wiring_A, "Y", 0) == 2
-    assert map_right_to_left(rotor_wiring_B, "O", 14) == 5
+    assert map_right_to_left(rotor_wiring_A, "R", 3) == 9
+    assert map_right_to_left(rotor_wiring_A, "W", 19) == 11
+    assert map_right_to_left(rotor_wiring_A, "C", 25) == 8
+    assert map_right_to_left(rotor_wiring_A, "K", 6) == 13
+    assert map_right_to_left(rotor_wiring_A, "F", 14) == 10
+    assert map_right_to_left(rotor_wiring_A, "M", 10) == 15
+    assert map_right_to_left(rotor_wiring_B, "A", 19) == 13
+    assert map_right_to_left(rotor_wiring_B, "M", 2) == 0
+    assert map_right_to_left(rotor_wiring_B, "G", 14) == 9
+    assert map_right_to_left(rotor_wiring_B, "N", 1) == 25
 
 def test_map_left_to_right():
-    rotor_wiring_A = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    #assert map_left_to_right(rotor_wiring_A, "J", 21) == 25
-    assert map_left_to_right(rotor_wiring_A, "R", 8) == 4
+    assert map_left_to_right(rotor_wiring_A, "K", 13) == 6
+    assert map_left_to_right(rotor_wiring_A, "U", 23) == 3
+    assert map_left_to_right(rotor_wiring_A, "C", 7) == 23
+    assert map_left_to_right(rotor_wiring_A, "M", 15) == 10
+    assert map_left_to_right(rotor_wiring_A, "F", 10) == 14
+    assert map_left_to_right(rotor_wiring_A, "K", 13) == 6
+    assert map_left_to_right(rotor_wiring_B, "A", 13) == 19
+    assert map_left_to_right(rotor_wiring_B, "M", 0) == 2
+    assert map_left_to_right(rotor_wiring_B, "G", 9) == 14
+    assert map_left_to_right(rotor_wiring_B, "N", 25) == 1
+
+def test_map_reflector():
+    assert map_reflector(reflector_map, 12) == 14

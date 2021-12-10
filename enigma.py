@@ -2,10 +2,6 @@ import string
 
 alphabet = string.ascii_uppercase
 
-rotor_wiring_A = "DMTWSILRUYQNKFEJCAZBPGXOHV"
-rotor_wiring_B = "HQZGPJTMOBLNCIFDYAWVEUSRKX"
-rotor_wiring_C = "UQNTLSZFMREHDPXKIBVYGJCWOA"
-
 def check_letter(obj):
     """Checks if specified object is a single letter string."""
     if not isinstance(obj, str): raise TypeError("Input letters should be strings.")
@@ -27,20 +23,29 @@ def find_alphabet_letter(index):
     check_index(index)
     return alphabet[index]
 
-def map_right_to_left(wiring, top_letter, input_index):
+def map_right_to_left(wiring, top_letter, input_pos):
     """Find rotor's left side output index.
     top_letter is the visible by an operator rotor's offset indication."""
     offset = find_alphabet_index(top_letter)
-    input_offset_index = (input_index + offset)%26
-    output_letter = wiring[input_offset_index]
-    output_index = find_alphabet_index(output_letter)
+    input_letter_index = (offset + input_pos)%26
+    output_letter = wiring[input_letter_index]
+    output_index = (find_alphabet_index(output_letter) - offset)%26
+
+    return output_index
+def map_left_to_right(wiring, top_letter, input_pos):
+    """Find rotor's right side output index.
+    top_letter is the visible by an operator rotor's offset indication."""
+    offset = find_alphabet_index(top_letter)
+    input_letter_index = (offset + input_pos)%26
+    input_letter = find_alphabet_letter(input_letter_index)
+    output_index = (wiring.find(input_letter) - offset)%26
 
     return output_index
 
-def map_left_to_right(wiring, top_letter, input_index):
-    """Find rotor's right side output index.
-    top_letter is the visible by an operator rotor's offset indication."""
-    pass
+def map_reflector(reflector_map, input_pos):
+    """Outputs exit position of current going though specified input position"""
+    output_letter = reflector_map[input_pos]
+    output_index = find_alphabet_index(output_letter)
 
     return output_index
 class IncorrectAlphabetLetterError(Exception):
