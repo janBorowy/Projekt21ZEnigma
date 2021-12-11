@@ -1,4 +1,4 @@
-from enigma import IncorrectAlphabetLetterError, IncorrectLetterPairError, IncorrectLetterPairListError, check_index, check_letter_pair, check_letter_pair_list, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_reflector, map_right_to_left
+from enigma import Config, IncorrectEnigmaLetterError, IncorrectLetterPairError, IncorrectLetterPairListError, InvalidWiringError, Rotor, check_index, check_letter_pair, check_letter_pair_list, check_wiring, cipher_character, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_plugboard, map_reflector, map_right_to_left
 import pytest
 
 #specyfikacje z modelu Enigma I (1930)
@@ -8,10 +8,18 @@ rotor_wiring_C = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
 
 reflector_map = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 
+rotor_A = Rotor(rotor_wiring_A, "Q")
+rotor_B = Rotor(rotor_wiring_B, "E")
+rotor_C = Rotor(rotor_wiring_C, "V")
+
+plugs = [("A", "Z"), ("C", "F"), ("P", "B"), ("K", "E"), ("U", "G"), ("W", "N"), ("X", "Y")]
+
+config = Config([rotor_A, rotor_B, rotor_C], plugs, reflector_map)
+
 def test_check_letter_pair():
     check_letter_pair(("A", "B"))
 
-    with pytest.raises(TypeError):
+    with pytest.raises(IncorrectEnigmaLetterError):
         check_letter_pair((1, 2))
 
     with pytest.raises(IncorrectLetterPairError):
@@ -28,8 +36,7 @@ def test_check_letter_pair_list():
         check_letter_pair_list([("A", "B"), ("A", "B"), ("E", "F")])
 
     with pytest.raises(IncorrectLetterPairListError):
-        check_letter_pair_list((("A", "B"), ("B", "A"), ("E", "F")))
-
+        check_letter_pair_list([("A", "B"), ("B", "A"), ("E", "F")])
 
 def test_check_index():
     check_index(5)
@@ -46,14 +53,32 @@ def test_check_index():
 def test_check_letter():
     check_letter("A")
 
-    with pytest.raises(TypeError):
+    with pytest.raises(IncorrectEnigmaLetterError):
         check_letter(1)
         check_letter(0.1)
         check_letter(("A", None))
 
-    with pytest.raises(ValueError):
+    with pytest.raises(IncorrectEnigmaLetterError):
         check_letter("AB")
         check_letter("ABCD")
+
+def test_check_wiring():
+    check_wiring("EKMFLGDQVZNTOWYHXUSPAIBRCJ")
+
+    with pytest.raises(InvalidWiringError):
+        check_wiring("EKMFLGDDVZNTOWYHXUSPAIBRCJ") # double D
+
+    with pytest.raises(IncorrectEnigmaLetterError):
+        check_wiring("EKMFLGDQvZNTOWYHXUSpAIBRCJ") # small case v and p
+    
+    with pytest.raises(InvalidWiringError):
+        check_wiring("EKTOWYHXUSpAIBRCJ")
+
+    with pytest.raises(InvalidWiringError):
+        check_wiring("")
+
+    with pytest.raises(InvalidWiringError):
+        check_wiring("EKMFLGDQVZNTOWYHXUSPAIBRCJŹ")
 
 def test_find_alphabet_index():
     assert find_alphabet_index("A") == 0
@@ -61,7 +86,7 @@ def test_find_alphabet_index():
     assert find_alphabet_index("Z") == 25
     assert find_alphabet_index("J") == 9
     
-    with pytest.raises(IncorrectAlphabetLetterError):
+    with pytest.raises(IncorrectEnigmaLetterError):
         find_alphabet_index("Ó")
 
 def test_find_alphabet_letter():
@@ -100,3 +125,76 @@ def test_map_reflector():
     assert map_reflector(reflector_map, 7) == 3
     assert map_reflector(reflector_map, 23) == 9
     assert map_reflector(reflector_map, 22) == 21
+
+def test_map_plugboard():
+    plugs = ([("A", "Z"), ("C", "F"), ("P", "B"), ("K", "E"), ("U", "G"), ("W", "N"), ("X", "Y")])
+
+    assert map_plugboard(plugs, 0) == 25
+    assert map_plugboard(plugs, 2) == 5
+    assert map_plugboard(plugs, 15) == 1
+    assert map_plugboard(plugs, 10) == 4
+    assert map_plugboard(plugs, 20) == 6
+    assert map_plugboard(plugs, 22) == 13
+    assert map_plugboard(plugs, 23) == 24
+
+    assert map_plugboard(plugs, 25) == 0
+    assert map_plugboard(plugs, 5) == 2
+    assert map_plugboard(plugs, 1) == 15
+    assert map_plugboard(plugs, 4) == 10
+    assert map_plugboard(plugs, 6) == 20
+    assert map_plugboard(plugs, 13) == 22
+    assert map_plugboard(plugs, 24) == 23
+
+    assert map_plugboard(plugs, 16) == 16
+    assert map_plugboard(plugs, 12) == 12
+
+def test_cipher_character():
+    assert cipher_character(config, "A") == "X"
+
+    rotor_A.top_letter = "L"
+    rotor_B.top_letter = "P"
+    rotor_C.top_letter = "R"
+
+    assert cipher_character(config, "F") == "P"
+
+    rotor_A.top_letter = "W"
+    rotor_B.top_letter = "Z"
+    rotor_C.top_letter = "W"
+
+    assert cipher_character(config, "O") == "L"
+
+def test_rotor_step():
+    assert rotor_A.top_letter == "A"
+    rotor_A.step()
+    assert rotor_A.top_letter == "B"
+    rotor_A.top_letter = "W"
+    rotor_A.step()
+    assert rotor_A.top_letter == "X"
+
+def test_config_step():
+    config.step()
+    assert rotor_A.top_letter == "B"
+    assert rotor_B.top_letter == "A"
+    assert rotor_C.top_letter == "A"
+    config.step()
+    assert rotor_A.top_letter == "C"
+    assert rotor_B.top_letter == "A"
+    assert rotor_C.top_letter == "A"
+
+    rotor_A.top_letter = "Q"
+    config.step()
+    assert rotor_A.top_letter == "R"
+    assert rotor_B.top_letter == "B"
+    assert rotor_C.top_letter == "A"
+    config.step()
+    assert rotor_A.top_letter == "S"
+    assert rotor_B.top_letter == "B"
+    assert rotor_C.top_letter == "A"
+
+    rotor_A.top_letter = "Q"
+    rotor_B.top_letter = "E"
+    rotor_C.top_letter = "V"
+    config.step()
+    assert rotor_A.top_letter == "R"
+    assert rotor_B.top_letter == "F"
+    assert rotor_C.top_letter == "W"
