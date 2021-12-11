@@ -1,4 +1,4 @@
-from enigma import IncorrectAlphabetLetterError, check_index, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_reflector, map_right_to_left
+from enigma import IncorrectAlphabetLetterError, IncorrectLetterPairError, IncorrectLetterPairListError, check_index, check_letter_pair, check_letter_pair_list, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_reflector, map_right_to_left
 import pytest
 
 #specyfikacje z modelu Enigma I (1930)
@@ -7,6 +7,29 @@ rotor_wiring_B = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
 rotor_wiring_C = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
 
 reflector_map = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+
+def test_check_letter_pair():
+    check_letter_pair(("A", "B"))
+
+    with pytest.raises(TypeError):
+        check_letter_pair((1, 2))
+
+    with pytest.raises(IncorrectLetterPairError):
+        check_letter_pair(["A", "B"])
+
+def test_check_letter_pair_list():
+    check_letter_pair_list([("A", "B"), ("C", "D"), ("E", "F")])
+    check_letter_pair_list([])
+
+    with pytest.raises(TypeError):
+        check_letter_pair_list((("A", "B"), ("C", "D"), ("E", "F")))
+
+    with pytest.raises(IncorrectLetterPairListError):
+        check_letter_pair_list([("A", "B"), ("A", "B"), ("E", "F")])
+
+    with pytest.raises(IncorrectLetterPairListError):
+        check_letter_pair_list((("A", "B"), ("B", "A"), ("E", "F")))
+
 
 def test_check_index():
     check_index(5)
@@ -73,3 +96,7 @@ def test_map_left_to_right():
 
 def test_map_reflector():
     assert map_reflector(reflector_map, 12) == 14
+    assert map_reflector(reflector_map, 0) == 24
+    assert map_reflector(reflector_map, 7) == 3
+    assert map_reflector(reflector_map, 23) == 9
+    assert map_reflector(reflector_map, 22) == 21
