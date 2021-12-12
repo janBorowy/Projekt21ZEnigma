@@ -1,4 +1,4 @@
-from enigma import Config, IncorrectEnigmaLetterError, IncorrectLetterPairError, IncorrectLetterPairListError, InvalidWiringError, Rotor, check_index, check_letter_pair, check_letter_pair_list, check_wiring, cipher_character, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_plugboard, map_reflector, map_right_to_left
+from enigma import Config, IncorrectEnigmaLetterError, IncorrectLetterPairError, IncorrectLetterPairListError, InvalidWiringError, Rotor, check_cipher_string, check_index, check_letter_pair, check_letter_pair_list, check_wiring, cipher_character, cipher_string, find_alphabet_index, check_letter, find_alphabet_letter, map_left_to_right, map_plugboard, map_reflector, map_right_to_left
 import pytest
 
 #specyfikacje z modelu Enigma I (1930)
@@ -80,6 +80,24 @@ def test_check_wiring():
     with pytest.raises(InvalidWiringError):
         check_wiring("EKMFLGDQVZNTOWYHXUSPAIBRCJŹ")
 
+def test_check_cipher_string():
+    check_cipher_string("HELLO")
+
+    with pytest.raises(TypeError):
+        check_cipher_string(110)
+
+    with pytest.raises(IncorrectEnigmaLetterError):
+        check_cipher_string(" HELLO ")
+    
+    with pytest.raises(IncorrectEnigmaLetterError):
+        check_cipher_string("HELLO!")
+
+    with pytest.raises(IncorrectEnigmaLetterError):
+        check_cipher_string("HELLO.")
+
+    with pytest.raises(IncorrectEnigmaLetterError):
+        check_cipher_string("HELLÓ")
+
 def test_find_alphabet_index():
     assert find_alphabet_index("A") == 0
     assert find_alphabet_index("B") == 1
@@ -149,6 +167,10 @@ def test_map_plugboard():
     assert map_plugboard(plugs, 12) == 12
 
 def test_cipher_character():
+    rotor_A.top_letter = "A"
+    rotor_B.top_letter = "A"
+    rotor_C.top_letter = "A"
+
     assert cipher_character(config, "A") == "X"
 
     rotor_A.top_letter = "L"
@@ -164,6 +186,10 @@ def test_cipher_character():
     assert cipher_character(config, "O") == "L"
 
 def test_rotor_step():
+    rotor_A.top_letter = "A"
+    rotor_B.top_letter = "A"
+    rotor_C.top_letter = "A"
+
     assert rotor_A.top_letter == "A"
     rotor_A.step()
     assert rotor_A.top_letter == "B"
@@ -172,6 +198,10 @@ def test_rotor_step():
     assert rotor_A.top_letter == "X"
 
 def test_config_step():
+    rotor_A.top_letter = "A"
+    rotor_B.top_letter = "A"
+    rotor_C.top_letter = "A"
+
     config.step()
     assert rotor_A.top_letter == "B"
     assert rotor_B.top_letter == "A"
@@ -198,3 +228,39 @@ def test_config_step():
     assert rotor_A.top_letter == "R"
     assert rotor_B.top_letter == "F"
     assert rotor_C.top_letter == "W"
+
+    rotor_A.top_letter = "O"
+    rotor_B.top_letter = "E"
+    rotor_C.top_letter = "F"
+    config.step()
+    assert rotor_A.top_letter == "P"
+    assert rotor_B.top_letter == "F"
+    assert rotor_C.top_letter == "G"
+
+def test_cipher_string():
+    rotor_A.top_letter = "A"
+    rotor_B.top_letter = "A"
+    rotor_C.top_letter = "A"
+
+    assert cipher_string(config, "HELLO") == "MJWFA"
+    assert rotor_A.top_letter == "F"
+    assert rotor_B.top_letter == "A"
+    assert rotor_C.top_letter == "A"
+
+    rotor_A.top_letter = "Q"
+    rotor_B.top_letter = "Q"
+    rotor_C.top_letter = "Z"
+
+    assert cipher_string(config, "HELLO") == "YKMGG"
+
+    rotor_A.top_letter = "F"
+    rotor_B.top_letter = "E"
+    rotor_C.top_letter = "H"
+
+    assert cipher_string(config, "POZDRAWIAMCIEPLUTKOZFRONTU") == "OTPMSTXGPDYCODVTLFTXEMJVDZ"
+
+    rotor_A.top_letter = "P"
+    rotor_B.top_letter = "V"
+    rotor_C.top_letter = "A"
+
+    assert cipher_string(config, "UWAGANAFLANKEZLEWEJ") == "ENLUGHNOYGPHMKWWASS"

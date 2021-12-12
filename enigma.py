@@ -24,6 +24,11 @@ def check_letter(obj):
     if len(obj) != 1: raise IncorrectEnigmaLetterError
     if not obj in alphabet: raise IncorrectEnigmaLetterError
 
+def check_cipher_string(obj):
+    if not isinstance(obj, str): raise TypeError("Text entered into enigma should be string")
+    for i in obj:
+        check_letter(i)
+
 def check_index(obj):
     """Checks if specified object is an intager between 0 and 26."""
     if not isinstance(obj, int): raise TypeError
@@ -110,8 +115,14 @@ def cipher_character(config, char):
     output_character = find_alphabet_letter(input_pos)
     return output_character
 
-def cipher_string(config, str):
-    """Ciphers enitre string using specified enigma config. Note that strings can only contain uppercased english letter. Spaces and comas are forbidden."""
+def cipher_string(config, plaintext):
+    """Ciphers plaintext using specified enigma config. Note that strings can only contain uppercased english letter. Spaces and comas are forbidden."""
+    cipher = ""
+    check_cipher_string(plaintext)
+    for i in plaintext:
+        config.step()
+        cipher += cipher_character(config, i)
+    return cipher
 
 class Rotor:
     def __init__(self, wiring, turnover, top_letter="A"):
@@ -138,8 +149,9 @@ class Config:
 
         if self.rotors[1].turnover == top_letter_B:
             self.rotors[2].step()
+            self.rotors[1].step()
 
-        if self.rotors[0].turnover == top_letter_A:
+        if self.rotors[0].turnover == top_letter_A and self.rotors[1].turnover != top_letter_B:
             self.rotors[1].step()
         
         self.rotors[0].step()
