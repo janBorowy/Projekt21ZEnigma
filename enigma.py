@@ -190,15 +190,10 @@ class Config:
     def step(self):
         top_letter_A = self.rotors[0].top_letter
         top_letter_B = self.rotors[1].top_letter
-        top_letter_C = self.rotors[2].top_letter
-
-        if self.rotors[2].turnover == top_letter_C:
-            self.rotors[2].step()
 
         if self.rotors[1].turnover == top_letter_B:
-            if not self.rotors[2].turnover == top_letter_C:
-                self.rotors[2].step()
             self.rotors[1].step()
+            self.rotors[2].step()
 
         if self.rotors[0].turnover == top_letter_A and\
            self.rotors[1].turnover != top_letter_B:

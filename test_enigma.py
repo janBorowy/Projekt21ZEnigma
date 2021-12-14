@@ -260,14 +260,6 @@ def test_config_step():
     assert rotor_B.top_letter == "F"
     assert rotor_C.top_letter == "G"
 
-    rotor_A.top_letter = "D"
-    rotor_B.top_letter = "G"
-    rotor_C.top_letter = "V"
-    config.step()
-    assert rotor_A.top_letter == "E"
-    assert rotor_B.top_letter == "G"
-    assert rotor_C.top_letter == "W"
-
 
 def test_cipher_string():
     rotor_A.top_letter = "A"
@@ -312,3 +304,10 @@ def test_cipher_string():
 
     assert cipher_string(config, "ENLUGHNOYGPHMKWWASS")\
         == "UWAGANAFLANKEZLEWEJ"
+
+    rotor_A.top_letter = "O"
+    rotor_B.top_letter = "D"
+    rotor_C.top_letter = "V"
+
+    assert cipher_string(config, "POZDROWODZU")\
+        == "BTUMWLFPUKQ"
