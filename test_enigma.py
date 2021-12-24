@@ -1,10 +1,12 @@
-from enigma import Config, IncorrectEnigmaLetterError,\
+from enigma_cipher import IncorrectEnigmaLetterError,\
     IncorrectLetterPairError, IncorrectLetterPairListError,\
-    InvalidWiringError, Rotor, check_cipher_string, check_index,\
+    InvalidWiringError, check_cipher_string, check_index,\
     check_letter_pair, check_letter_pair_list,\
     check_wiring, cipher_character, cipher_string,\
     find_alphabet_index, check_letter, find_alphabet_letter,\
     map_left_to_right, map_plugboard, map_reflector, map_right_to_left
+from enigma_classes import Rotor, Config
+import enigma_io
 import pytest
 
 # specyfikacje z modelu Enigma I (1930)
@@ -311,3 +313,18 @@ def test_cipher_string():
 
     assert cipher_string(config, "POZDROWODZU")\
         == "BTUMWLFPUKQ"
+
+
+def test_read_config_from_json():
+
+    with open('test_config.json', 'r') as file_handle:
+        config = enigma_io.read_config_from_json(file_handle)
+
+    assert config.rotors[0].wiring == "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+    assert config.rotors[0].top_letter == "A"
+    assert config.rotors[0].turnover == "Q"
+
+    assert config.plugs == [("A", "Z"), ("C", "F"), ("P", "B"),
+                            ("K", "E"), ("U", "G"), ("W", "N"), ("X", "Y")]
+
+    assert config.reflector_map == "YRUHQSLDPXNGOKMIEBFZCWVJAT"

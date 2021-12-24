@@ -3,6 +3,9 @@ import string
 alphabet = string.ascii_uppercase
 
 
+# Config checking methods
+
+
 def check_letter_pair(obj):
     """Checks if specified object is a two element tuple containing single
      uppercase letters.
@@ -38,6 +41,7 @@ def check_letter(obj):
 
 
 def check_cipher_string(obj):
+    """Checks if specified object is a string cipherable by enigma."""
     if not isinstance(obj, str):
         raise TypeError("Text entered into enigma should be string")
     for i in obj:
@@ -53,6 +57,7 @@ def check_index(obj):
 
 
 def check_wiring(obj):
+    """Checks if specified enigma wiring is correct."""
     if not isinstance(obj, str):
         raise InvalidWiringError
     if not len(obj) == 26:
@@ -61,6 +66,9 @@ def check_wiring(obj):
         if obj.count(i) > 1:
             raise InvalidWiringError
         check_letter(i)
+
+
+# Ciphering methods
 
 
 def find_alphabet_index(letter):
@@ -165,41 +173,7 @@ def cipher_string(config, plaintext):
     return cipher
 
 
-class Rotor:
-    def __init__(self, wiring, turnover, top_letter="A"):
-        check_wiring(wiring)
-        self.wiring = wiring
-        self.top_letter = top_letter
-        self.turnover = turnover
-
-    def step(self):
-        top_letter_index = find_alphabet_index(self.top_letter)
-        if not top_letter_index == 25:
-            self.top_letter = find_alphabet_letter(top_letter_index + 1)
-        else:
-            self.top_letter = "A"
-
-
-class Config:
-    def __init__(self, rotors, plugs, reflector_map):
-        # list of rotors in order the current flows when it first passes
-        self.rotors = rotors
-        self.plugs = plugs
-        self.reflector_map = reflector_map
-
-    def step(self):
-        top_letter_A = self.rotors[0].top_letter
-        top_letter_B = self.rotors[1].top_letter
-
-        if self.rotors[1].turnover == top_letter_B:
-            self.rotors[1].step()
-            self.rotors[2].step()
-
-        if self.rotors[0].turnover == top_letter_A and\
-           self.rotors[1].turnover != top_letter_B:
-            self.rotors[1].step()
-
-        self.rotors[0].step()
+# Excpetions
 
 
 class IncorrectLetterPairError(Exception):
