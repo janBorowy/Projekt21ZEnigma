@@ -173,6 +173,14 @@ def cipher_string(config, plaintext):
     return cipher
 
 
+def create_plugboard_visual(plugs):
+    output = ""
+    for pair in plugs[:-1]:
+        output += pair[0] + pair[1] + " "
+    output += plugs[-1][0] + plugs[-1][1]
+    return output
+
+
 # Excpetions
 
 

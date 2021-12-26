@@ -2,7 +2,7 @@ from enigma_cipher import IncorrectEnigmaLetterError,\
     IncorrectLetterPairError, IncorrectLetterPairListError,\
     InvalidWiringError, check_cipher_string, check_index,\
     check_letter_pair, check_letter_pair_list,\
-    check_wiring, cipher_character, cipher_string,\
+    check_wiring, cipher_character, cipher_string, create_plugboard_visual,\
     find_alphabet_index, check_letter, find_alphabet_letter,\
     map_left_to_right, map_plugboard, map_reflector, map_right_to_left
 from enigma_classes import Rotor, Config
@@ -328,3 +328,21 @@ def test_read_config_from_json():
                             ("K", "E"), ("U", "G"), ("W", "N"), ("X", "Y")]
 
     assert config.reflector_map == "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+
+
+def test_create_plugboard_visual():
+    assert create_plugboard_visual(plugs) == "AZ CF PB KE UG WN XY"
+
+
+def test_rotor_regress_and_advance():
+    rotor = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "A")
+    rotor.regress()
+    assert rotor.top_letter == "Z"
+    rotor.advance()
+    assert rotor.top_letter == "A"
+    rotor.top_letter = "Q"
+    rotor.advance()
+    assert rotor.top_letter == "R"
+    rotor.top_letter = "Y"
+    rotor.regress()
+    assert rotor.top_letter == "X"

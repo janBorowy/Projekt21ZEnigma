@@ -16,6 +16,18 @@ class Rotor:
         else:
             self.top_letter = "A"
 
+    def advance(self):
+        top_letter_index = find_alphabet_index(self.top_letter)
+        top_letter_index = top_letter_index + 1\
+            if top_letter_index != 25 else 0
+        self.top_letter = find_alphabet_letter(top_letter_index)
+
+    def regress(self):
+        top_letter_index = find_alphabet_index(self.top_letter)
+        top_letter_index = top_letter_index - 1\
+            if top_letter_index != 0 else 25
+        self.top_letter = find_alphabet_letter(top_letter_index)
+
 
 class Config:
     def __init__(self, rotors, plugs, reflector_map):
