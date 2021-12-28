@@ -187,24 +187,24 @@ def create_plugboard_visual(plugs):
 class IncorrectLetterPairError(Exception):
     def __init__(self):
         super().__init__("Letter pairs given to map_plugboard function\
-                        should be two element tuples conataining single\
-                        uppercase characters.")
+ should be two element tuples conataining single\
+ uppercase characters.")
 
 
 class IncorrectLetterPairListError(Exception):
     def __init__(self):
         super().__init__("Letter pair list should contain only elements\
-                          which fulfill letter pair conditions.\
-                          No two elements can contain the same character.")
+ which fulfill letter pair conditions.\
+ No two elements can contain the same character.")
 
 
 class InvalidWiringError(Exception):
     def __init__(self):
         super().__init__("Wiring should be specified by 26\
-                          upper case letters each appearing only once.")
+ upper case letters each appearing only once.")
 
 
 class IncorrectEnigmaLetterError(Exception):
     def __init__(self):
         super().__init__("Letters used in enigma should\
-                        be uppercase english letters.")
+ be uppercase english letters.")

@@ -1,6 +1,6 @@
 import sys
 
-from PySide2.QtWidgets import QApplication, QMainWindow
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
 from ui_enigma import Ui_MainWindow
 import enigma_cipher
 import enigma_io
@@ -15,10 +15,11 @@ class enigmaAppWindow(QMainWindow):
         self.ciphertext = ''
         self.plaintext = ''
         self.letter_lit = None
-        self.lamp_lit = None
+        self.lamp_lit = self.ui.lamp_A
 
         self.ui.clear_button.clicked.connect(self.clear_text_browsers)
         self.ui.reset_button.clicked.connect(self.reset_rotors)
+        self.ui.action_open.triggered.connect(self.open_file)
         try:
             with open('config.json') as file_handle:
                 self.config = enigma_io.read_config_from_json(file_handle)
@@ -79,11 +80,11 @@ class enigmaAppWindow(QMainWindow):
 
     def set_up_config_box(self):
         ui = self.ui
-        ui.rotor_A_wiring.setText("Rotor A wiring: "
+        ui.rotor_A_wiring.setText("Rotor A wiring: \n"
                                   + self.config.rotors[0].wiring)
-        ui.rotor_B_wiring.setText("Rotor B wiring: "
+        ui.rotor_B_wiring.setText("Rotor B wiring: \n"
                                   + self.config.rotors[1].wiring)
-        ui.rotor_C_wiring.setText("Rotor C wiring: "
+        ui.rotor_C_wiring.setText("Rotor C wiring: \n"
                                   + self.config.rotors[2].wiring)
         ui.rotor_A_turnover.setText("Rotor A turnover: "
                                     + self.config.rotors[0].turnover)
@@ -91,11 +92,19 @@ class enigmaAppWindow(QMainWindow):
                                     + self.config.rotors[1].turnover)
         ui.rotor_C_turnover.setText("Rotor C turnover: "
                                     + self.config.rotors[2].turnover)
-        ui.reflector_wiring.setText("Reflector wiring: "
+        ui.reflector_wiring.setText("Reflector wiring: \n"
                                     + self.config.reflector_map)
-        ui.plugboard.setText("Plugboard: " + enigma_cipher.
-                             create_plugboard_visual(self.config.plugs)
-                             + " AA AA AA AA AA AA")
+        self.set_up_plugboard_text()
+
+    def set_up_plugboard_text(self):
+        text = "Plugboard: " + enigma_cipher.\
+                create_plugboard_visual(self.config.plugs)
+        if len(text) // 31 == 1:
+            text = text[:31]+"\n                 "+text[31:]
+        self.ui.plugboard.setText(text)
+
+    def open_file(self):
+        file_path = QFileDialog.getOpenFileName(self, 'Open file')
 
 
 def guiMain(args):
