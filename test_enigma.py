@@ -1,6 +1,6 @@
-from enigma_cipher import IncorrectEnigmaLetterError,\
-    IncorrectLetterPairError, IncorrectLetterPairListError,\
-    InvalidWiringError, check_cipher_string, check_index,\
+from typing import Type
+from enigma_cipher import InvalidWiringError, check_cipher_string,\
+    InvalidPlugboardError, InvalidEnigmaCiphertextString,\
     check_letter_pair, check_letter_pair_list,\
     check_wiring, cipher_character, cipher_string, create_plugboard_visual,\
     find_alphabet_index, check_letter, find_alphabet_letter,\
@@ -29,10 +29,10 @@ config = Config([rotor_A, rotor_B, rotor_C], plugs, reflector_map)
 def test_check_letter_pair():
     check_letter_pair(("A", "B"))
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidPlugboardError):
         check_letter_pair((1, 2))
 
-    with pytest.raises(IncorrectLetterPairError):
+    with pytest.raises(InvalidPlugboardError):
         check_letter_pair(["A", "B"])
 
 
@@ -40,40 +40,30 @@ def test_check_letter_pair_list():
     check_letter_pair_list([("A", "B"), ("C", "D"), ("E", "F")])
     check_letter_pair_list([])
 
-    with pytest.raises(TypeError):
+    with pytest.raises(InvalidPlugboardError):
         check_letter_pair_list((("A", "B"), ("C", "D"), ("E", "F")))
 
-    with pytest.raises(IncorrectLetterPairListError):
+    with pytest.raises(InvalidPlugboardError):
         check_letter_pair_list([("A", "B"), ("A", "B"), ("E", "F")])
 
-    with pytest.raises(IncorrectLetterPairListError):
+    with pytest.raises(InvalidPlugboardError):
         check_letter_pair_list([("A", "B"), ("B", "A"), ("E", "F")])
 
-
-def test_check_index():
-    check_index(5)
-
-    with pytest.raises(TypeError):
-        check_index("A")
-        check_index(0.1)
-        check_index((1, None))
-
-    with pytest.raises(ValueError):
-        check_index(27)
-        check_index(-1)
+    with pytest.raises(InvalidPlugboardError):
+        check_letter_pair_list([("A", "K"), ("H", "K"), ("E", "F")])
 
 
 def test_check_letter():
-    check_letter("A")
+    check_letter("A", InvalidEnigmaCiphertextString)
 
-    with pytest.raises(IncorrectEnigmaLetterError):
-        check_letter(1)
-        check_letter(0.1)
-        check_letter(("A", None))
+    with pytest.raises(TypeError):
+        check_letter(1, TypeError)
+        check_letter(0.1, Type)
+        check_letter(("A", None), TypeError)
 
-    with pytest.raises(IncorrectEnigmaLetterError):
-        check_letter("AB")
-        check_letter("ABCD")
+    with pytest.raises(ValueError):
+        check_letter("AB", ValueError)
+        check_letter("ABCD", ValueError)
 
 
 def test_check_wiring():
@@ -82,7 +72,7 @@ def test_check_wiring():
     with pytest.raises(InvalidWiringError):
         check_wiring("EKMFLGDDVZNTOWYHXUSPAIBRCJ")  # double D
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidWiringError):
         check_wiring("EKMFLGDQvZNTOWYHXUSpAIBRCJ")  # small case v and p
 
     with pytest.raises(InvalidWiringError):
@@ -98,19 +88,19 @@ def test_check_wiring():
 def test_check_cipher_string():
     check_cipher_string("HELLO")
 
-    with pytest.raises(TypeError):
+    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string(110)
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string(" HELLO ")
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string("HELLO!")
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string("HELLO.")
 
-    with pytest.raises(IncorrectEnigmaLetterError):
+    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string("HELLÓ")
 
 
@@ -119,9 +109,6 @@ def test_find_alphabet_index():
     assert find_alphabet_index("B") == 1
     assert find_alphabet_index("Z") == 25
     assert find_alphabet_index("J") == 9
-
-    with pytest.raises(IncorrectEnigmaLetterError):
-        find_alphabet_index("Ó")
 
 
 def test_find_alphabet_letter():
@@ -132,29 +119,29 @@ def test_find_alphabet_letter():
 
 
 def test_map_right_to_left():
-    assert map_right_to_left(rotor_wiring_A, "R", 3) == 9
-    assert map_right_to_left(rotor_wiring_A, "W", 19) == 11
-    assert map_right_to_left(rotor_wiring_A, "C", 25) == 8
-    assert map_right_to_left(rotor_wiring_A, "K", 6) == 13
-    assert map_right_to_left(rotor_wiring_A, "F", 14) == 10
-    assert map_right_to_left(rotor_wiring_A, "M", 10) == 15
-    assert map_right_to_left(rotor_wiring_B, "A", 19) == 13
-    assert map_right_to_left(rotor_wiring_B, "M", 2) == 0
-    assert map_right_to_left(rotor_wiring_B, "G", 14) == 9
-    assert map_right_to_left(rotor_wiring_B, "N", 1) == 25
+    assert map_right_to_left(rotor_wiring_A, "R", 0,  3) == 9
+    assert map_right_to_left(rotor_wiring_A, "W", 0, 19) == 11
+    assert map_right_to_left(rotor_wiring_A, "C", 0, 25) == 8
+    assert map_right_to_left(rotor_wiring_A, "K", 0, 6) == 13
+    assert map_right_to_left(rotor_wiring_A, "F", 0, 14) == 10
+    assert map_right_to_left(rotor_wiring_A, "M", 0, 10) == 15
+    assert map_right_to_left(rotor_wiring_B, "A", 0, 19) == 13
+    assert map_right_to_left(rotor_wiring_B, "M", 0, 2) == 0
+    assert map_right_to_left(rotor_wiring_B, "G", 0, 14) == 9
+    assert map_right_to_left(rotor_wiring_B, "N", 0, 1) == 25
 
 
 def test_map_left_to_right():
-    assert map_left_to_right(rotor_wiring_A, "K", 13) == 6
-    assert map_left_to_right(rotor_wiring_A, "U", 23) == 3
-    assert map_left_to_right(rotor_wiring_A, "C", 7) == 23
-    assert map_left_to_right(rotor_wiring_A, "M", 15) == 10
-    assert map_left_to_right(rotor_wiring_A, "F", 10) == 14
-    assert map_left_to_right(rotor_wiring_A, "K", 13) == 6
-    assert map_left_to_right(rotor_wiring_B, "A", 13) == 19
-    assert map_left_to_right(rotor_wiring_B, "M", 0) == 2
-    assert map_left_to_right(rotor_wiring_B, "G", 9) == 14
-    assert map_left_to_right(rotor_wiring_B, "N", 25) == 1
+    assert map_left_to_right(rotor_wiring_A, "K", 0, 13) == 6
+    assert map_left_to_right(rotor_wiring_A, "U", 0, 23) == 3
+    assert map_left_to_right(rotor_wiring_A, "C", 0, 7) == 23
+    assert map_left_to_right(rotor_wiring_A, "M", 0, 15) == 10
+    assert map_left_to_right(rotor_wiring_A, "F", 0, 10) == 14
+    assert map_left_to_right(rotor_wiring_A, "K", 0, 13) == 6
+    assert map_left_to_right(rotor_wiring_B, "A", 0, 13) == 19
+    assert map_left_to_right(rotor_wiring_B, "M", 0, 0) == 2
+    assert map_left_to_right(rotor_wiring_B, "G", 0, 9) == 14
+    assert map_left_to_right(rotor_wiring_B, "N", 0, 25) == 1
 
 
 def test_map_reflector():
@@ -346,3 +333,29 @@ def test_rotor_regress_and_advance():
     rotor.top_letter = "Y"
     rotor.regress()
     assert rotor.top_letter == "X"
+
+
+def test_map_right_to_left_with_ring_setting_specified():
+    assert map_right_to_left(rotor_wiring_A, "R", 1,  3) == 25
+    assert map_right_to_left(rotor_wiring_A, "W", 25, 19) == 0
+    assert map_right_to_left(rotor_wiring_A, "C", 5, 25) == 4
+    assert map_right_to_left(rotor_wiring_A, "K", 13, 6) == 8
+    assert map_right_to_left(rotor_wiring_A, "F", 24, 14) == 1
+    assert map_right_to_left(rotor_wiring_A, "M", 10, 10) == 12
+    assert map_right_to_left(rotor_wiring_A, "A", 3, 19) == 0
+    assert map_right_to_left(rotor_wiring_A, "M", 8, 2) == 25
+    assert map_right_to_left(rotor_wiring_A, "G", 21, 14) == 24
+    assert map_right_to_left(rotor_wiring_A, "N", 18, 1) == 6
+
+
+def test_map_left_to_right_with_ring_setting_specified():
+    assert map_left_to_right(rotor_wiring_A, "T", 3, 16) == 15
+#    assert map_left_to_right(rotor_wiring_A, "U", 0, 23) == 3
+#    assert map_left_to_right(rotor_wiring_A, "C", 0, 7) == 23
+#    assert map_left_to_right(rotor_wiring_A, "M", 0, 15) == 10
+#    assert map_left_to_right(rotor_wiring_A, "F", 0, 10) == 14
+#    assert map_left_to_right(rotor_wiring_A, "K", 0, 13) == 6
+#    assert map_left_to_right(rotor_wiring_B, "A", 0, 13) == 19
+#    assert map_left_to_right(rotor_wiring_B, "M", 0, 0) == 2
+#    assert map_left_to_right(rotor_wiring_B, "G", 0, 9) == 14
+#    assert map_left_to_right(rotor_wiring_B, "N", 0, 25) == 1

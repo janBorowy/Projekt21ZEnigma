@@ -11,61 +11,60 @@ def check_letter_pair(obj):
      uppercase letters.
     Used in map_plugboard."""
     if not isinstance(obj, tuple):
-        raise IncorrectLetterPairError
+        raise InvalidPlugboardError("Plugs should be specified as tuples.")
     if not len(obj) == 2:
-        raise IncorrectLetterPairError
+        raise InvalidPlugboardError("Plugs must specify two elements")
     for i in obj:
-        check_letter(i)
+        check_letter(i, InvalidPlugboardError("Plugs must be uppercase\
+letters."))
 
 
 def check_letter_pair_list(obj):
     """Checks if specified object is a list containing only letter pairs."""
+    letters = ""
     if not isinstance(obj, list):
-        raise TypeError
+        raise InvalidPlugboardError("Plugboard in config must be specified\
+as a list.")
     for i in obj:
         check_letter_pair(i)
         if obj.count(i) > 1:
-            raise IncorrectLetterPairListError
+            raise InvalidPlugboardError("Plug duplication found.")
         if tuple(reversed(i)) in obj:
-            raise IncorrectLetterPairListError
+            raise InvalidPlugboardError("Plug duplication found.")
+        letters += i[0] + i[1]
+    for i in letters:
+        if letters.count(i) > 1:
+            raise InvalidPlugboardError("Same letter appears twice")
 
 
-def check_letter(obj):
+def check_letter(obj, exception):
     """Checks if specified object is a single letter string."""
     if not isinstance(obj, str):
-        raise IncorrectEnigmaLetterError
+        raise exception
     if len(obj) != 1:
-        raise IncorrectEnigmaLetterError
+        raise exception
     if obj not in alphabet:
-        raise IncorrectEnigmaLetterError
+        raise exception
 
 
 def check_cipher_string(obj):
     """Checks if specified object is a string cipherable by enigma."""
     if not isinstance(obj, str):
-        raise TypeError("Text entered into enigma should be string")
+        raise InvalidEnigmaCiphertextString("Given plaintext is not a string")
     for i in obj:
-        check_letter(i)
-
-
-def check_index(obj):
-    """Checks if specified object is an intager between 0 and 26."""
-    if not isinstance(obj, int):
-        raise TypeError
-    if obj not in range(0, 26):
-        raise ValueError
+        check_letter(i, InvalidEnigmaCiphertextString)
 
 
 def check_wiring(obj):
     """Checks if specified enigma wiring is correct."""
     if not isinstance(obj, str):
-        raise InvalidWiringError
+        raise InvalidWiringError("Specified wiring is not a string")
     if not len(obj) == 26:
-        raise InvalidWiringError
+        raise InvalidWiringError("Wiring must be 26 letters long")
     for i in obj:
         if obj.count(i) > 1:
-            raise InvalidWiringError
-        check_letter(i)
+            raise InvalidWiringError("Letter duplication found")
+        check_letter(i, InvalidWiringError)
 
 
 # Ciphering methods
@@ -73,36 +72,33 @@ def check_wiring(obj):
 
 def find_alphabet_index(letter):
     """Finds an alphabet index of specified upper case character."""
-    check_letter(letter)
-    if alphabet.find(letter) != -1:
-        return alphabet.find(letter)
-    raise IncorrectEnigmaLetterError
+    return alphabet.find(letter)
 
 
 def find_alphabet_letter(index):
     """Finds a letter corresponding to specified index"""
-    check_index(index)
     return alphabet[index]
 
 
-def map_right_to_left(wiring, top_letter, input_pos):
+def map_right_to_left(wiring, top_letter, ring_setting, input_pos):
     """Find rotor's left side output index.
     top_letter is the visible by an operator rotor's offset indication."""
     offset = find_alphabet_index(top_letter)
     input_letter_index = (offset + input_pos) % 26
-    output_letter = wiring[input_letter_index]
-    output_index = (find_alphabet_index(output_letter) - offset) % 26
+    output_letter = wiring[(input_letter_index-ring_setting) % 26]
+    output_index = (find_alphabet_index(output_letter) -
+                    offset + ring_setting) % 26
 
     return output_index
 
 
-def map_left_to_right(wiring, top_letter, input_pos):
+def map_left_to_right(wiring, top_letter, ring_setting, input_pos):
     """Find rotor's right side output index.
     top_letter is the visible by an operator rotor's offset indication."""
     offset = find_alphabet_index(top_letter)
     input_letter_index = (offset + input_pos) % 26
     input_letter = find_alphabet_letter(input_letter_index)
-    output_index = (wiring.find(input_letter) - offset) % 26
+    output_index = (wiring.find((input_letter)) - offset) % 26
 
     return output_index
 
@@ -122,7 +118,6 @@ def map_plugboard(pairs, input_pos):
         Pairs is an array of two element tuples,
         which represent connected letters in
         physical machine."""
-    check_letter_pair_list(pairs)
     input_letter = find_alphabet_letter(input_pos)
     output_letter = None
     for i in pairs:
@@ -148,12 +143,14 @@ def cipher_character(config, char):
     input_pos = map_plugboard(config.plugs, input_pos)
 
     for i in config.rotors:
-        input_pos = map_right_to_left(i.wiring, i.top_letter, input_pos)
+        input_pos = map_right_to_left(i.wiring, i.top_letter,
+                                      i.ring_setting, input_pos)
 
     input_pos = map_reflector(config.reflector_map, input_pos)
 
     for i in config.rotors[::-1]:
-        input_pos = map_left_to_right(i.wiring, i.top_letter, input_pos)
+        input_pos = map_left_to_right(i.wiring, i.top_letter,
+                                      i.ring_setting, input_pos)
 
     input_pos = map_plugboard(config.plugs, input_pos)
 
@@ -166,7 +163,6 @@ def cipher_string(config, plaintext):
         Note that strings can only contain uppercased english letter.
         Spaces and comas are forbidden."""
     cipher = ""
-    check_cipher_string(plaintext)
     for i in plaintext:
         config.step()
         cipher += cipher_character(config, i)
@@ -183,28 +179,30 @@ def create_plugboard_visual(plugs):
 
 # Excpetions
 
-
-class IncorrectLetterPairError(Exception):
-    def __init__(self):
-        super().__init__("Letter pairs given to map_plugboard function\
- should be two element tuples conataining single\
- uppercase characters.")
-
-
-class IncorrectLetterPairListError(Exception):
-    def __init__(self):
-        super().__init__("Letter pair list should contain only elements\
- which fulfill letter pair conditions.\
- No two elements can contain the same character.")
-
-
 class InvalidWiringError(Exception):
-    def __init__(self):
-        super().__init__("Wiring should be specified by 26\
- upper case letters each appearing only once.")
+    def __init__(self, info="Wiring should be specified by 26\
+ upper case letters each appearing only once."):
+        super().__init__(info)
 
 
-class IncorrectEnigmaLetterError(Exception):
-    def __init__(self):
-        super().__init__("Letters used in enigma should\
- be uppercase english letters.")
+class InvalidPlugboardError(Exception):
+    def __init__(self, info="Invalid plugboard set specified."):
+        super().__init__(info)
+
+
+class InvalidEnigmaCiphertextString(Exception):
+    def __init__(self, info="Enigma ciphertext should only contain\
+uppercase letters. Symbols such as spaces and comas ar forbidden."):
+        super().__init__(info)
+
+
+class InvalidTurnoverSettingSpecified(Exception):
+    def __init__(self, info="Turnover setting should be specified\
+as single uppercase letter."):
+        super().__init__(info)
+
+
+class InvalidLetterSettingSpecified(Exception):
+    def __init__(self, info="Starting letter setting should be specified\
+as single uppercase letter."):
+        super().__init__(info)

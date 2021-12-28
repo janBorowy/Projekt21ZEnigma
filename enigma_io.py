@@ -5,8 +5,10 @@ import json
 
 def initialize_rotor(data, index):
     enigma_cipher.check_wiring(data[f'rotor{index}_wiring'])
-    enigma_cipher.check_letter(data[f'rotor{index}_turnover'])
-    enigma_cipher.check_letter(data[f'rotor{index}_starting_letter'])
+    enigma_cipher.check_letter(data[f'rotor{index}_turnover'],
+                               enigma_cipher.InvalidTurnoverSettingSpecified)
+    enigma_cipher.check_letter(data[f'rotor{index}_starting_letter'],
+                               enigma_cipher.InvalidLetterSettingSpecified)
     wiring = data[f'rotor{index}_wiring']
     turnover = data[f'rotor{index}_turnover']
     top_letter = data[f'rotor{index}_starting_letter']

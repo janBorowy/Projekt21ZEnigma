@@ -2,16 +2,20 @@
     "rotorA_wiring": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
     "rotorA_starting_letter": "A",
     "rotorA_turnover": "Q",
-
     "rotorB_wiring": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
     "rotorB_starting_letter": "A",
     "rotorB_turnover": "E",
-
     "rotorC_wiring": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
     "rotorC_starting_letter": "A",
     "rotorC_turnover": "V",
-
     "reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
-
-    "plugs": [["A", "Z"], ["C", "F"], ["P", "B"], ["K", "E"], ["U", "G"], ["W", "N"], ["X", "Y"], ["D", "H"]]
+    "plugs": [
+        ["A", "Z"],
+        ["C", "F"],
+        ["P", "B"],
+        ["K", "E"],
+        ["U", "G"],
+        ["W", "N"],
+        ["X", "Y"]
+    ]
 }

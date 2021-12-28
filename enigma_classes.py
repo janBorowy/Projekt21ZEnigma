@@ -3,11 +3,12 @@ from enigma_cipher import check_wiring,\
 
 
 class Rotor:
-    def __init__(self, wiring, turnover, top_letter="A"):
+    def __init__(self, wiring, turnover, top_letter="A", ring_setting=0):
         check_wiring(wiring)
         self.wiring = wiring
         self.top_letter = top_letter
         self.turnover = turnover
+        self.ring_setting = ring_setting
 
     def step(self):
         top_letter_index = find_alphabet_index(self.top_letter)

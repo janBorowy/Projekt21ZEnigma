@@ -1,9 +1,12 @@
+import json
 import sys
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog,\
+    QMessageBox
 from ui_enigma import Ui_MainWindow
 import enigma_cipher
 import enigma_io
+import jsbeautifier
 
 
 class enigmaAppWindow(QMainWindow):
@@ -11,6 +14,36 @@ class enigmaAppWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        try:
+            with open('config.json') as file_handle:
+                self.config = enigma_io.read_config_from_json(file_handle)
+        except FileNotFoundError:
+            QMessageBox.information(self, "Configuration error",
+                                    "config.json file not found, \
+creating default")
+            self.create_default_config_file()
+            with open('config.json') as file_handle:
+                self.config = enigma_io.read_config_from_json(file_handle)
+        except enigma_cipher.InvalidLetterSettingSpecified:
+            QMessageBox.warning(self, "Configuration error",
+                                "Incorrect starting letter specified in \
+config.json file")
+            exit()
+        except enigma_cipher.InvalidPlugboardError:
+            QMessageBox.warning(self, "Configuration error",
+                                "Invalid plugboard setting specified in \
+config.json file")
+        except enigma_cipher.InvalidTurnoverSettingSpecified:
+            QMessageBox.warning(self, "Configuration error",
+                                "Incorrect turnover setting specified in \
+config.json file")
+            exit()
+        except enigma_cipher.InvalidWiringError:
+            QMessageBox.warning(self, "Configuration error",
+                                "Incorrect wiring specified in \
+config.json file")
+            exit()
 
         self.ciphertext = ''
         self.plaintext = ''
@@ -20,11 +53,7 @@ class enigmaAppWindow(QMainWindow):
         self.ui.clear_button.clicked.connect(self.clear_text_browsers)
         self.ui.reset_button.clicked.connect(self.reset_rotors)
         self.ui.action_open.triggered.connect(self.open_file)
-        try:
-            with open('config.json') as file_handle:
-                self.config = enigma_io.read_config_from_json(file_handle)
-        except Exception as e:
-            print(e)
+
         self.set_up_config_box()
         self.ui.rotor_A_advance.clicked.connect(lambda: self.advance_rotor(0))
         self.ui.rotor_A_regress.clicked.connect(lambda: self.regress_rotor(0))
@@ -105,6 +134,29 @@ class enigmaAppWindow(QMainWindow):
 
     def open_file(self):
         file_path = QFileDialog.getOpenFileName(self, 'Open file')
+
+    def create_default_config_file(self):
+        data = {
+                "rotorA_wiring": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+                "rotorA_starting_letter": "A",
+                "rotorA_turnover": "Q",
+
+                "rotorB_wiring": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+                "rotorB_starting_letter": "A",
+                "rotorB_turnover": "E",
+
+                "rotorC_wiring": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+                "rotorC_starting_letter": "A",
+                "rotorC_turnover": "V",
+
+                "reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
+
+                "plugs": [["A", "Z"], ["C", "F"], ["P", "B"], ["K", "E"],
+                          ["U", "G"], ["W", "N"], ["X", "Y"]]
+        }
+        with open('config.json', 'w') as file_handle:
+            data = jsbeautifier.beautify(json.dumps(data))
+            file_handle.write(data)
 
 
 def guiMain(args):
