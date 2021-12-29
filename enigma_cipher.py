@@ -97,9 +97,9 @@ def map_left_to_right(wiring, top_letter, ring_setting, input_pos):
     top_letter is the visible by an operator rotor's offset indication."""
     offset = find_alphabet_index(top_letter)
     input_letter_index = (offset + input_pos) % 26
-    input_letter = find_alphabet_letter(input_letter_index)
-    output_index = (wiring.find((input_letter)) - offset) % 26
-
+    input_letter = find_alphabet_letter((input_letter_index
+                                         - ring_setting) % 26)
+    output_index = (wiring.find((input_letter)) - offset + ring_setting) % 26
     return output_index
 
 

@@ -18,6 +18,18 @@ class enigmaAppWindow(QMainWindow):
         try:
             with open('config.json') as file_handle:
                 self.config = enigma_io.read_config_from_json(file_handle)
+                if isinstance(file_handle, str):
+                    json.loads(file_handle)
+        except ValueError:
+            QMessageBox.warning(self, "Configuartion error",
+                                "config.json file is corrupted.\n\
+If the error persists, try deleting it.")
+            exit()
+        except enigma_io.MissingConfigKeyError:
+            QMessageBox.warning(self, "Configuartion error",
+                                "config.json is missing data.\n\
+If the error persists, try deleting it.")
+            exit()
         except FileNotFoundError:
             QMessageBox.information(self, "Configuration error",
                                     "config.json file not found, \

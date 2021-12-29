@@ -29,7 +29,7 @@ def read_config_from_json(file_handle):
         rotorB = initialize_rotor(data, "B")
         rotorC = initialize_rotor(data, "C")
     except KeyError:
-        raise MissingConfigKeyError('Config.json is missing a key.')
+        raise MissingConfigKeyError
 
     return enigma_classes.Config([rotorA, rotorB, rotorC],
                                  plugs, reflector_map)
@@ -37,4 +37,4 @@ def read_config_from_json(file_handle):
 
 class MissingConfigKeyError(Exception):
     def __init__(self):
-        super().__init__()
+        super().__init__('Config.json is missing a key.')

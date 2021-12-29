@@ -144,6 +144,32 @@ def test_map_left_to_right():
     assert map_left_to_right(rotor_wiring_B, "N", 0, 25) == 1
 
 
+def test_map_right_to_left_with_ring_setting_specified():
+    assert map_right_to_left(rotor_wiring_A, "R", 1,  3) == 25
+    assert map_right_to_left(rotor_wiring_A, "W", 25, 19) == 0
+    assert map_right_to_left(rotor_wiring_A, "C", 5, 25) == 4
+    assert map_right_to_left(rotor_wiring_A, "K", 13, 6) == 8
+    assert map_right_to_left(rotor_wiring_A, "F", 24, 14) == 1
+    assert map_right_to_left(rotor_wiring_A, "M", 10, 10) == 12
+    assert map_right_to_left(rotor_wiring_A, "A", 3, 19) == 0
+    assert map_right_to_left(rotor_wiring_A, "M", 8, 2) == 25
+    assert map_right_to_left(rotor_wiring_A, "G", 21, 14) == 24
+    assert map_right_to_left(rotor_wiring_A, "N", 18, 1) == 6
+
+
+def test_map_left_to_right_with_ring_setting_specified():
+    assert map_left_to_right(rotor_wiring_A, "A", 1, 6) == 4
+    assert map_left_to_right(rotor_wiring_A, "B", 1, 22) == 13
+    assert map_left_to_right(rotor_wiring_A, "C", 1, 2) == 5
+    assert map_left_to_right(rotor_wiring_A, "V", 10, 24) == 14
+    assert map_left_to_right(rotor_wiring_A, "O", 25, 7) == 24
+    assert map_left_to_right(rotor_wiring_A, "K", 18, 24) == 15
+    assert map_left_to_right(rotor_wiring_A, "J", 12, 0) == 19
+    assert map_left_to_right(rotor_wiring_A, "Z", 2, 6) == 9
+    assert map_left_to_right(rotor_wiring_A, "V", 15, 14) == 11
+    assert map_left_to_right(rotor_wiring_A, "R", 24, 3) == 20
+
+
 def test_map_reflector():
     assert map_reflector(reflector_map, 12) == 14
     assert map_reflector(reflector_map, 0) == 24
@@ -301,6 +327,13 @@ def test_cipher_string():
     assert cipher_string(config, "POZDROWODZU")\
         == "BTUMWLFPUKQ"
 
+    rotor_A.top_letter = "Q"
+    rotor_B.top_letter = "E"
+    rotor_C.top_letter = "V"
+
+    assert cipher_string(config, "YTXCNRWHMXA")\
+        == "SIEMANECZKO"
+
 
 def test_read_config_from_json():
 
@@ -333,29 +366,3 @@ def test_rotor_regress_and_advance():
     rotor.top_letter = "Y"
     rotor.regress()
     assert rotor.top_letter == "X"
-
-
-def test_map_right_to_left_with_ring_setting_specified():
-    assert map_right_to_left(rotor_wiring_A, "R", 1,  3) == 25
-    assert map_right_to_left(rotor_wiring_A, "W", 25, 19) == 0
-    assert map_right_to_left(rotor_wiring_A, "C", 5, 25) == 4
-    assert map_right_to_left(rotor_wiring_A, "K", 13, 6) == 8
-    assert map_right_to_left(rotor_wiring_A, "F", 24, 14) == 1
-    assert map_right_to_left(rotor_wiring_A, "M", 10, 10) == 12
-    assert map_right_to_left(rotor_wiring_A, "A", 3, 19) == 0
-    assert map_right_to_left(rotor_wiring_A, "M", 8, 2) == 25
-    assert map_right_to_left(rotor_wiring_A, "G", 21, 14) == 24
-    assert map_right_to_left(rotor_wiring_A, "N", 18, 1) == 6
-
-
-def test_map_left_to_right_with_ring_setting_specified():
-    assert map_left_to_right(rotor_wiring_A, "T", 3, 16) == 15
-#    assert map_left_to_right(rotor_wiring_A, "U", 0, 23) == 3
-#    assert map_left_to_right(rotor_wiring_A, "C", 0, 7) == 23
-#    assert map_left_to_right(rotor_wiring_A, "M", 0, 15) == 10
-#    assert map_left_to_right(rotor_wiring_A, "F", 0, 10) == 14
-#    assert map_left_to_right(rotor_wiring_A, "K", 0, 13) == 6
-#    assert map_left_to_right(rotor_wiring_B, "A", 0, 13) == 19
-#    assert map_left_to_right(rotor_wiring_B, "M", 0, 0) == 2
-#    assert map_left_to_right(rotor_wiring_B, "G", 0, 9) == 14
-#    assert map_left_to_right(rotor_wiring_B, "N", 0, 25) == 1
