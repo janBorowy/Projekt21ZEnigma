@@ -1,5 +1,6 @@
 import json
 import sys
+import PySide2
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog,\
     QMessageBox
@@ -67,12 +68,28 @@ config.json file")
         self.ui.action_open.triggered.connect(self.open_file)
 
         self.set_up_config_box()
+
         self.ui.rotor_A_advance.clicked.connect(lambda: self.advance_rotor(0))
         self.ui.rotor_A_regress.clicked.connect(lambda: self.regress_rotor(0))
         self.ui.rotor_B_advance.clicked.connect(lambda: self.advance_rotor(1))
         self.ui.rotor_B_regress.clicked.connect(lambda: self.regress_rotor(1))
         self.ui.rotor_C_advance.clicked.connect(lambda: self.advance_rotor(2))
         self.ui.rotor_C_regress.clicked.connect(lambda: self.regress_rotor(2))
+
+        self.update_ring_setting_display()
+
+        self.ui.ring_setting_A_advance.clicked.\
+            connect(lambda: self.ring_setting_advance(0))
+        self.ui.ring_setting_A_regress.clicked.\
+            connect(lambda: self.ring_setting_regress(0))
+        self.ui.ring_setting_B_advance.clicked.\
+            connect(lambda: self.ring_setting_advance(1))
+        self.ui.ring_setting_B_regress.clicked.\
+            connect(lambda: self.ring_setting_regress(1))
+        self.ui.ring_setting_C_advance.clicked.\
+            connect(lambda: self.ring_setting_advance(2))
+        self.ui.ring_setting_C_regress.clicked.\
+            connect(lambda: self.ring_setting_regress(2))
 
     def update_rotor_display(self):
         self.ui.rotor_A_display.setText(self.config.rotors[0].top_letter)
@@ -108,7 +125,10 @@ config.json file")
     def reset_rotors(self):
         for rotor in self.config.rotors:
             rotor.top_letter = "A"
+        for rotor in self.config.rotors:
+            rotor.ring_setting = 0
         self.update_rotor_display()
+        self.update_ring_setting_display()
 
     def light_up_lamp(self, letter):
         if self.lamp_lit:
@@ -144,8 +164,47 @@ config.json file")
             text = text[:31]+"\n                 "+text[31:]
         self.ui.plugboard.setText(text)
 
+    def update_ring_setting_display(self):
+        self.ui.ring_setting_A.setText("Ring setting: " +
+                                       str(self.config.rotors[0].ring_setting))
+        self.ui.ring_setting_B.setText("Ring setting: " +
+                                       str(self.config.rotors[1].ring_setting))
+        self.ui.ring_setting_C.setText("Ring setting: " +
+                                       str(self.config.rotors[2].ring_setting))
+
+    def ring_setting_advance(self, rotor_index):
+        ring_setting = self.config.rotors[rotor_index].ring_setting
+        ring_setting = ring_setting + 1 if ring_setting < 25 else 0
+        self.config.rotors[rotor_index].ring_setting = ring_setting
+        self.update_ring_setting_display()
+
+    def ring_setting_regress(self, rotor_index):
+        ring_setting = self.config.rotors[rotor_index].ring_setting
+        ring_setting = ring_setting - 1 if ring_setting > 0 else 25
+        self.config.rotors[rotor_index].ring_setting = ring_setting
+        self.update_ring_setting_display()
+
     def open_file(self):
-        file_path = QFileDialog.getOpenFileName(self, 'Open file')
+        file_path = QFileDialog.getOpenFileName(self, 'Open file')[0]
+        ciphertext = ""
+        plaintext = ""
+        with open(file_path, 'r') as file_handle:
+            for line in file_handle:
+                try:
+                    enigma_cipher.check_cipher_string(line)
+                except enigma_cipher.InvalidEnigmaCiphertextString:
+                    QMessageBox.warning(self, "Invalid file error", "Invalid file given. \
+Text files \
+entered into enigma should \
+only contain uppercase english alphabet letters.\n\
+Symbols such as spaces and comas are foribdden.")
+                    return
+                plaintext += line
+                ciphertext += enigma_cipher.cipher_string(self.config, line)
+        self.clear_text_browsers()
+        self.update_rotor_display()
+        self.ui.CipherTextBrowser.setText(ciphertext)
+        self.ui.PlainTextBrowser.setText(plaintext)
 
     def create_default_config_file(self):
         data = {
@@ -169,6 +228,15 @@ config.json file")
         with open('config.json', 'w') as file_handle:
             data = jsbeautifier.beautify(json.dumps(data))
             file_handle.write(data)
+
+    def keyPressEvent(self, event: PySide2.QtGui.QKeyEvent):
+        # if not len(event.text()) == 1:
+        #     return
+        if event.text().isalpha():
+            letter = str.upper(event.text())
+            self.update_ciphertext_browser(letter)
+            self.update_plaintext_browser(letter)
+            self.update_rotor_display()
 
 
 def guiMain(args):
