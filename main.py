@@ -1,13 +1,12 @@
 import json
 import sys
-import PySide2
-
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog,\
     QMessageBox
 from ui_enigma import Ui_MainWindow
 import enigma_cipher
 import enigma_io
 import jsbeautifier
+from textwrap import wrap
 
 
 class enigmaAppWindow(QMainWindow):
@@ -66,6 +65,9 @@ config.json file")
         self.ui.clear_button.clicked.connect(self.clear_text_browsers)
         self.ui.reset_button.clicked.connect(self.reset_rotors)
         self.ui.action_open.triggered.connect(self.open_file)
+        self.ui.action_save_as.triggered.connect(self.save_file)
+
+        self.ui.button_space.clicked.connect(self.input_space)
 
         self.set_up_config_box()
 
@@ -105,10 +107,13 @@ config.json file")
         self.update_rotor_display()
 
     def update_ciphertext_browser(self, letter):
-        self.config.step()
-        cipher_letter = enigma_cipher.cipher_character(self.config, letter)
+        if letter != " ":
+            self.config.step()
+            cipher_letter = enigma_cipher.cipher_character(self.config, letter)
+            self.light_up_lamp(cipher_letter)
+        else:
+            cipher_letter = " "
         self.ciphertext += cipher_letter
-        self.light_up_lamp(cipher_letter)
         self.ui.CipherTextBrowser.setText(self.ciphertext)
 
     def update_plaintext_browser(self, letter):
@@ -188,23 +193,44 @@ config.json file")
         file_path = QFileDialog.getOpenFileName(self, 'Open file')[0]
         ciphertext = ""
         plaintext = ""
-        with open(file_path, 'r') as file_handle:
-            for line in file_handle:
-                try:
-                    enigma_cipher.check_cipher_string(line)
-                except enigma_cipher.InvalidEnigmaCiphertextString:
-                    QMessageBox.warning(self, "Invalid file error", "Invalid file given. \
+        try:
+            with open(file_path, 'r') as file_handle:
+                for line in file_handle:
+                    line = line.rstrip("\n")
+                    try:
+                        enigma_cipher.check_cipher_string(line)
+                    except enigma_cipher.InvalidEnigmaCiphertextString:
+                        QMessageBox.warning(self, "Invalid file error", "Invalid file given. \
 Text files \
 entered into enigma should \
 only contain uppercase english alphabet letters.\n\
 Symbols such as spaces and comas are foribdden.")
-                    return
-                plaintext += line
-                ciphertext += enigma_cipher.cipher_string(self.config, line)
-        self.clear_text_browsers()
-        self.update_rotor_display()
-        self.ui.CipherTextBrowser.setText(ciphertext)
-        self.ui.PlainTextBrowser.setText(plaintext)
+                        return
+                    plaintext += line
+                    ciphertext += enigma_cipher.\
+                        cipher_string(self.config, line)
+            self.clear_text_browsers()
+            self.update_rotor_display()
+            self.ui.CipherTextBrowser.setText(ciphertext)
+            self.ui.PlainTextBrowser.setText(plaintext)
+        except FileNotFoundError:
+            pass
+
+    def save_file(self):
+        save_path = QFileDialog.getSaveFileName(self, "Save as...")[0]
+        try:
+            with open(save_path, 'w') as file_handle:
+                data_plaintext = wrap(self.plaintext, 79)
+                data_ciphertext = wrap(self.ciphertext, 79)
+                data = ''
+                for line in data_plaintext:
+                    data += line+"\n"
+                data += "-----------------\n"
+                for line in data_ciphertext:
+                    data += line+"\n"
+                file_handle.write(data)
+        except FileNotFoundError:
+            pass
 
     def create_default_config_file(self):
         data = {
@@ -229,14 +255,19 @@ Symbols such as spaces and comas are foribdden.")
             data = jsbeautifier.beautify(json.dumps(data))
             file_handle.write(data)
 
-    def keyPressEvent(self, event: PySide2.QtGui.QKeyEvent):
-        # if not len(event.text()) == 1:
-        #     return
+    def keyPressEvent(self, event):
+        if event.key() == 16777248:
+            self.input_space()
+            return
         if event.text().isalpha():
             letter = str.upper(event.text())
             self.update_ciphertext_browser(letter)
             self.update_plaintext_browser(letter)
             self.update_rotor_display()
+
+    def input_space(self):
+        self.update_ciphertext_browser(" ")
+        self.update_plaintext_browser(" ")
 
 
 def guiMain(args):

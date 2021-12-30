@@ -92,9 +92,6 @@ def test_check_cipher_string():
         check_cipher_string(110)
 
     with pytest.raises(InvalidEnigmaCiphertextString):
-        check_cipher_string(" HELLO ")
-
-    with pytest.raises(InvalidEnigmaCiphertextString):
         check_cipher_string("HELLO!")
 
     with pytest.raises(InvalidEnigmaCiphertextString):
@@ -305,6 +302,13 @@ def test_cipher_string():
 
     assert cipher_string(config, "OTPMSTXGPDYCODVTLFTXEMJVDZ")\
         == "POZDRAWIAMCIEPLUTKOZFRONTU"
+
+    rotor_A.top_letter = "F"
+    rotor_B.top_letter = "E"
+    rotor_C.top_letter = "H"
+
+    assert cipher_string(config, "OTPMSTXGPD YCODVTLFT X EMJVDZ")\
+        == "POZDRAWIAM CIEPLUTKO Z FRONTU"
 
     rotor_A.top_letter = "P"
     rotor_B.top_letter = "V"

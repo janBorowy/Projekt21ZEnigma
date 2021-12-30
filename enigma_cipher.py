@@ -52,6 +52,8 @@ def check_cipher_string(obj):
     if not isinstance(obj, str):
         raise InvalidEnigmaCiphertextString("Given plaintext is not a string")
     for i in obj:
+        if i == " ":
+            continue
         check_letter(i, InvalidEnigmaCiphertextString)
 
 
@@ -164,6 +166,9 @@ def cipher_string(config, plaintext):
         Spaces and comas are forbidden."""
     cipher = ""
     for i in plaintext:
+        if i == " ":
+            cipher += " "
+            continue
         config.step()
         cipher += cipher_character(config, i)
     return cipher
