@@ -5,6 +5,7 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog,\
 from ui_enigma import Ui_MainWindow
 import enigma_cipher
 import enigma_io
+import os
 import jsbeautifier
 from textwrap import wrap
 
@@ -66,6 +67,9 @@ config.json file")
         self.ui.reset_button.clicked.connect(self.reset_rotors)
         self.ui.action_open.triggered.connect(self.open_file)
         self.ui.action_save_as.triggered.connect(self.save_file)
+        self.ui.action_save_only.triggered.connect(self.save_only_cipher_file)
+        self.ui.action_cipher_directly.\
+            triggered.connect(self.save_cipher_directly)
 
         self.ui.button_space.clicked.connect(self.input_space)
 
@@ -191,30 +195,27 @@ config.json file")
 
     def open_file(self):
         file_path = QFileDialog.getOpenFileName(self, 'Open file')[0]
-        ciphertext = ""
-        plaintext = ""
+        self.ciphertext = ""
+        self.plaintext = ""
         try:
+            if os.path.getsize(file_path) > 5000:
+                raise FileSizeError
             with open(file_path, 'r') as file_handle:
-                for line in file_handle:
-                    line = line.rstrip("\n")
-                    try:
-                        enigma_cipher.check_cipher_string(line)
-                    except enigma_cipher.InvalidEnigmaCiphertextString:
-                        QMessageBox.warning(self, "Invalid file error", "Invalid file given. \
-Text files \
-entered into enigma should \
-only contain uppercase english alphabet letters.\n\
-Symbols such as spaces and comas are foribdden.")
-                        return
-                    plaintext += line
-                    ciphertext += enigma_cipher.\
+                data = file_handle.read().split("\n")
+                for line in data:
+                    line = enigma_cipher.transform_to_cipherable(line)
+                    line = line+" "
+                    self.plaintext += line
+                    self.ciphertext += enigma_cipher.\
                         cipher_string(self.config, line)
-            self.clear_text_browsers()
             self.update_rotor_display()
-            self.ui.CipherTextBrowser.setText(ciphertext)
-            self.ui.PlainTextBrowser.setText(plaintext)
+            self.ui.CipherTextBrowser.setText(self.ciphertext)
+            self.ui.PlainTextBrowser.setText(self.plaintext)
         except FileNotFoundError:
-            pass
+            return
+        except FileSizeError:
+            QMessageBox.warning(self, "File too big",
+                                "Text files shouldn't be bigger than 5KB")
 
     def save_file(self):
         save_path = QFileDialog.getSaveFileName(self, "Save as...")[0]
@@ -229,6 +230,58 @@ Symbols such as spaces and comas are foribdden.")
                 for line in data_ciphertext:
                     data += line+"\n"
                 file_handle.write(data)
+        except FileNotFoundError:
+            return
+
+    def save_only_cipher_file(self):
+        save_path = QFileDialog.getSaveFileName(self, "Save as...")[0]
+        try:
+            with open(save_path, 'w') as file_handle:
+                data = wrap(self.ciphertext, 79)
+                data_str = ""
+                for line in data:
+                    data_str += line+"\n"
+                file_handle.write(data_str)
+        except FileNotFoundError:
+            return
+
+    def save_cipher_directly(self):
+        # load
+        str_settings = f'Ring settings: {str(self.config.rotors[2].ring_setting)} \
+{str(self.config.rotors[1].ring_setting)} \
+{str(self.config.rotors[0].ring_setting)} \
+Rotors: {self.config.rotors[2].top_letter} \
+{self.config.rotors[1].top_letter} \
+{self.config.rotors[0].top_letter}'
+        file_path = QFileDialog.getOpenFileName(self, 'Open file to cipher')[0]
+        ciphertext = ""
+        try:
+            if os.path.getsize(file_path) > 10000000:
+                raise FileSizeError
+            with open(file_path, 'r') as file_handle:
+                data = file_handle.read().split("\n")
+                for line in data:
+                    line = enigma_cipher.transform_to_cipherable(line)
+                    line = line+" "
+                    ciphertext += enigma_cipher.\
+                        cipher_string(self.config, line)
+            self.update_rotor_display()
+        except FileNotFoundError:
+            return
+        except FileSizeError:
+            QMessageBox.warning(self, "File too big",
+                                "Text files ciphered directly \
+                                shouldn't be bigger than 10MB")
+        # save
+        save_path = QFileDialog.getSaveFileName(self, "Save as...")[0]
+        try:
+            with open(save_path, 'w') as file_handle:
+                data_save = wrap(ciphertext, 79)
+                data_str = ""
+                for line in data_save:
+                    data_str += line+"\n"
+                data_str += str_settings
+                file_handle.write(data_str)
         except FileNotFoundError:
             pass
 
@@ -268,6 +321,11 @@ Symbols such as spaces and comas are foribdden.")
     def input_space(self):
         self.update_ciphertext_browser(" ")
         self.update_plaintext_browser(" ")
+
+
+class FileSizeError(Exception):
+    def __init__(self):
+        super().__init__("File is too big.")
 
 
 def guiMain(args):

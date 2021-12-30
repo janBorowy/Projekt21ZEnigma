@@ -27,6 +27,10 @@ class Ui_MainWindow(object):
         self.action_open.setObjectName(u"action_open")
         self.action_save_as = QAction(MainWindow)
         self.action_save_as.setObjectName(u"action_save_as")
+        self.action_save_only = QAction(MainWindow)
+        self.action_save_only.setObjectName(u"action_save_only")
+        self.action_cipher_directly = QAction(MainWindow)
+        self.action_cipher_directly.setObjectName(u"action_cipher_directly")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_6 = QGridLayout(self.centralwidget)
@@ -774,6 +778,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.action_open)
         self.menuFile.addAction(self.action_save_as)
+        self.menuFile.addAction(self.action_save_only)
+        self.menuFile.addAction(self.action_cipher_directly)
 
         self.retranslateUi(MainWindow)
 
@@ -784,6 +790,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.action_open.setText(QCoreApplication.translate("MainWindow", u"Open", None))
         self.action_save_as.setText(QCoreApplication.translate("MainWindow", u"Save as...", None))
+        self.action_save_only.setText(QCoreApplication.translate("MainWindow", u"Save as... (only cipher)", None))
+        self.action_cipher_directly.setText(QCoreApplication.translate("MainWindow", u"Cipher directly", None))
         self.button_G.setText(QCoreApplication.translate("MainWindow", u"G", None))
         self.button_K.setText(QCoreApplication.translate("MainWindow", u"K", None))
         self.button_R.setText(QCoreApplication.translate("MainWindow", u"R", None))

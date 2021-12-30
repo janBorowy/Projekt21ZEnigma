@@ -182,6 +182,15 @@ def create_plugboard_visual(plugs):
     return output
 
 
+def transform_to_cipherable(data):
+    data = data.upper()
+    new_data = str()
+    for letter in data:
+        if letter in alphabet or letter in ['\n', ' ']:
+            new_data += letter
+    return new_data
+
+
 # Excpetions
 
 class InvalidWiringError(Exception):

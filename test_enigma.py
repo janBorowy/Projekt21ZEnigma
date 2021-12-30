@@ -4,7 +4,7 @@ from enigma_cipher import InvalidWiringError, check_cipher_string,\
     check_letter_pair, check_letter_pair_list,\
     check_wiring, cipher_character, cipher_string, create_plugboard_visual,\
     find_alphabet_index, check_letter, find_alphabet_letter,\
-    map_left_to_right, map_plugboard, map_reflector, map_right_to_left
+    map_left_to_right, map_plugboard, map_reflector, map_right_to_left, transform_to_cipherable
 from enigma_classes import Rotor, Config
 import enigma_io
 import pytest
@@ -370,3 +370,14 @@ def test_rotor_regress_and_advance():
     rotor.top_letter = "Y"
     rotor.regress()
     assert rotor.top_letter == "X"
+
+
+def test_transform_to_cipherable():
+    assert transform_to_cipherable("(that “stern and just man, \
+as Maurice Baring calls him) this was \
+enough, and he was condemned to death. After eight months imprisonment \
+he was with twenty-one others taken out to the Semyonovsky Square to \
+be shot.") == "THAT STERN AND JUST MAN AS MAURICE BARING CALLS HIM THIS \
+WAS ENOUGH AND HE WAS CONDEMNED TO DEATH AFTER EIGHT MONTHS IMPRISONMENT \
+HE WAS WITH TWENTYONE OTHERS TAKEN OUT TO THE \
+SEMYONOVSKY SQUARE TO BE SHOT"
