@@ -15,6 +15,7 @@ class enigmaAppWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowTitle("Enigma simulator")
 
         try:
             with open('config.json') as file_handle:
