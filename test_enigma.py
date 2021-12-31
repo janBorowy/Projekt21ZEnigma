@@ -4,9 +4,10 @@ from enigma_cipher import InvalidWiringError, check_cipher_string,\
     check_letter_pair, check_letter_pair_list,\
     check_wiring, cipher_character, cipher_string, create_plugboard_visual,\
     find_alphabet_index, check_letter, find_alphabet_letter,\
-    map_left_to_right, map_plugboard, map_reflector, map_right_to_left, transform_to_cipherable
+    map_left_to_right, map_plugboard, map_reflector,\
+    map_right_to_left, transform_to_cipherable
 from enigma_classes import Rotor, Config
-import enigma_io
+import enigma_config_io
 import pytest
 
 # specyfikacje z modelu Enigma I (1930)
@@ -342,7 +343,7 @@ def test_cipher_string():
 def test_read_config_from_json():
 
     with open('test_config.json', 'r') as file_handle:
-        config = enigma_io.read_config_from_json(file_handle)
+        config = enigma_config_io.read_config_from_json(file_handle)
 
     assert config.rotors[0].wiring == "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
     assert config.rotors[0].top_letter == "A"

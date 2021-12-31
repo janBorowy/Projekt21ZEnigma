@@ -4,9 +4,8 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog,\
     QMessageBox
 from ui_enigma import Ui_MainWindow
 import enigma_cipher
-import enigma_io
+import enigma_config_io
 import os
-import jsbeautifier
 from textwrap import wrap
 
 
@@ -19,7 +18,8 @@ class enigmaAppWindow(QMainWindow):
 
         try:
             with open('config.json') as file_handle:
-                self.config = enigma_io.read_config_from_json(file_handle)
+                self.config = enigma_config_io.\
+                    read_config_from_json(file_handle)
                 if isinstance(file_handle, str):
                     json.loads(file_handle)
         except ValueError:
@@ -27,7 +27,7 @@ class enigmaAppWindow(QMainWindow):
                                 "config.json file is corrupted.\n\
 If the error persists, try deleting it.")
             exit()
-        except enigma_io.MissingConfigKeyError:
+        except enigma_config_io.MissingConfigKeyError:
             QMessageBox.warning(self, "Configuartion error",
                                 "config.json is missing data.\n\
 If the error persists, try deleting it.")
@@ -38,7 +38,8 @@ If the error persists, try deleting it.")
 creating default")
             self.create_default_config_file()
             with open('config.json') as file_handle:
-                self.config = enigma_io.read_config_from_json(file_handle)
+                self.config = enigma_config_io.\
+                    read_config_from_json(file_handle)
         except enigma_cipher.InvalidLetterSettingSpecified:
             QMessageBox.warning(self, "Configuration error",
                                 "Incorrect starting letter specified in \
@@ -84,6 +85,7 @@ config.json file")
         self.ui.rotor_C_regress.clicked.connect(lambda: self.regress_rotor(2))
 
         self.update_ring_setting_display()
+        self.update_rotor_display()
 
         self.ui.ring_setting_A_advance.clicked.\
             connect(lambda: self.ring_setting_advance(0))
@@ -168,8 +170,10 @@ config.json file")
         self.set_up_plugboard_text()
 
     def set_up_plugboard_text(self):
+        if len(self.config.plugs) == 0:
+            return
         text = "Plugboard: " + enigma_cipher.\
-                create_plugboard_visual(self.config.plugs)
+            create_plugboard_visual(self.config.plugs)
         if len(text) // 31 == 1:
             text = text[:31]+"\n                 "+text[31:]
         self.ui.plugboard.setText(text)
@@ -302,11 +306,10 @@ Rotors: {self.config.rotors[2].top_letter} \
 
                 "reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
 
-                "plugs": [["A", "Z"], ["C", "F"], ["P", "B"], ["K", "E"],
-                          ["U", "G"], ["W", "N"], ["X", "Y"]]
+                "plugs": []
         }
         with open('config.json', 'w') as file_handle:
-            data = jsbeautifier.beautify(json.dumps(data))
+            data = json.dumps(data, indent=1)
             file_handle.write(data)
 
     def keyPressEvent(self, event):
