@@ -1,0 +1,2 @@
+[flake8]
+    ignore = ui_enigma.py
