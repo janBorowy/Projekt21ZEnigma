@@ -312,7 +312,7 @@ Rotors: {self.config.rotors[2].top_letter} \
             data = json.dumps(data, indent=1)
             file_handle.write(data)
 
-    def _keyPressEvent(self, event):
+    def keyPressEvent(self, event):
         if event.key() == 16777248:
             self._input_space()
             return

@@ -1,2 +1,2 @@
 [flake8]
-    ignore = ui_enigma.py
+exclude = ui_*.py 
