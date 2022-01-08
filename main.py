@@ -16,6 +16,7 @@ class enigmaAppWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Enigma simulator")
 
+# Reading config
         try:
             with open('config.json') as file_handle:
                 self.config = enigma_config_io.\
@@ -59,11 +60,13 @@ config.json file")
                                 "Incorrect wiring specified in \
 config.json file")
             exit()
+# output variables
 
         self.ciphertext = ''
         self.plaintext = ''
         self.letter_lit = None
         self.lamp_lit = self.ui.lamp_A
+# connecting signals to functions
 
         self.ui.clear_button.clicked.connect(self._clear_text_browsers)
         self.ui.reset_button.clicked.connect(self._reset_rotors)
@@ -99,6 +102,7 @@ config.json file")
             connect(lambda: self._ring_setting_advance(2))
         self.ui.ring_setting_C_regress.clicked.\
             connect(lambda: self._ring_setting_regress(2))
+# app functions
 
     def _update_rotor_display(self):
         self.ui.rotor_A_display.setText(self.config.rotors[0].top_letter)
@@ -198,6 +202,11 @@ config.json file")
         self.config.rotors[rotor_index].ring_setting = ring_setting
         self._update_ring_setting_display()
 
+# Saving and reading functions are created here are
+# created here because they update output variables.
+# Also cipher directly option is avaiable if user
+# doesn't wish to use batch instead.
+
     def _open_file(self):
         file_path = QFileDialog.getOpenFileName(self, 'Open file')[0]
         self.ciphertext = ""
@@ -237,6 +246,7 @@ config.json file")
                 file_handle.write(data)
         except FileNotFoundError:
             return
+# Save only cipher means "don't save with plaintext"
 
     def _save_only_cipher_file(self):
         save_path = QFileDialog.getSaveFileName(self, "Save as...")[0]
@@ -249,6 +259,9 @@ config.json file")
                 file_handle.write(data_str)
         except FileNotFoundError:
             return
+
+# Cipher directly also writes inital rotor state
+# and ring settings at the end of the file
 
     def _save_cipher_directly(self):
         # load

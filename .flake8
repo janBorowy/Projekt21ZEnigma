@@ -1,2 +1,2 @@
 [flake8]
-exclude = ui_*.py 
+--exclude = ui_*.py

@@ -7,13 +7,16 @@ def initialize_rotor(data, index):
     enigma_cipher.check_wiring(data[f'rotor{index}_wiring'])
     enigma_cipher.check_letter(data[f'rotor{index}_turnover'],
                                enigma_cipher.InvalidTurnoverSettingSpecified)
-    enigma_cipher.check_letter(data[f'rotor{index}_starting_letter'],
-                               enigma_cipher.InvalidLetterSettingSpecified)
+    if f'rotor{index}_starting_letter' in data.keys():
+        enigma_cipher.check_letter(
+            data[f'rotor{index}_starting_letter'],
+            enigma_cipher.InvalidLetterSettingSpecified)
     wiring = data[f'rotor{index}_wiring']
     turnover = data[f'rotor{index}_turnover']
-    top_letter = data[f'rotor{index}_starting_letter']
+    if f'rotor{index}_starting_letter' in data.keys():
+        top_letter = data[f'rotor{index}_starting_letter']
 
-    return enigma_classes.Rotor(wiring, turnover, top_letter)
+    return enigma_classes.Rotor(wiring, turnover)
 
 
 def read_config_from_json(file_handle):
