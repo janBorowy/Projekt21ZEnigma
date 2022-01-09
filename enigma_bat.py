@@ -160,9 +160,10 @@ enigmacipher [key] [text file to cipher]")
         with open(file_path, 'r') as file_handle:
             ciphertext = cipher_file(file_handle, config)
     except FileNotFoundError:
-        print("Couldn't find file to cipher in specified path.")
+        print("Couldn't find file to cipher using path.")
+        exit()
 
     # save ciphertext into file
     with open(file_name+"_ciphered", 'w') as file_handle:
         save_ciphertext_to_file(file_handle, str_settings)
-        print(f'successfully saved to {file_name}_ciphered')
+        print(f'successfully ciphered and saved to {file_name}_ciphered')
