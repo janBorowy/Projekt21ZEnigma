@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python3 ~/Projekt21ZEnigma/enigma_bat.py $1 $2
