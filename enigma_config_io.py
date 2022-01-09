@@ -15,7 +15,7 @@ def initialize_rotor(data, index):
     turnover = data[f'rotor{index}_turnover']
     if f'rotor{index}_starting_letter' in data.keys():
         top_letter = data[f'rotor{index}_starting_letter']
-
+        return enigma_classes.Rotor(wiring, turnover, top_letter)
     return enigma_classes.Rotor(wiring, turnover)
 
 
@@ -40,4 +40,5 @@ def read_config_from_json(file_handle):
 
 class MissingConfigKeyError(Exception):
     def __init__(self):
-        super().__init__('Config.json is missing a key.')
+        super().__init__('Config.json is corrupted.\
+        If the problem persists, try deleting it.')
