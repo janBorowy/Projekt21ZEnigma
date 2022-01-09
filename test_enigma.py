@@ -437,10 +437,3 @@ def test_init_bat_config():
     assert config.rotors[0].ring_setting == 0
     assert config.rotors[1].ring_setting == 4
     assert config.rotors[2].ring_setting == 25
-
-
-def test_settings_to_str():
-    assert generate_settings_in_str(config) == "Ciphered with key: A00A00A00"
-    config.rotors[0].top_letter = "B"
-    config.rotors[1].ring_setting = 25
-    assert generate_settings_in_str(config) == "Ciphered with key: B00A25A00"
