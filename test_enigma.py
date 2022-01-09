@@ -7,7 +7,7 @@ from enigma_cipher import InvalidWiringError, check_cipher_string,\
     map_left_to_right, map_plugboard, map_reflector,\
     map_right_to_left, transform_to_cipherable
 from enigma_classes import Rotor, Config
-from enigma_bat import IncorrectKeySpecifiedError,\
+from enigma_bat import IncorrectKeySpecifiedError, generate_settings_in_str,\
     validate_key, init_config, receive_key
 import enigma_config_io
 import pytest
@@ -437,3 +437,10 @@ def test_init_bat_config():
     assert config.rotors[0].ring_setting == 0
     assert config.rotors[1].ring_setting == 4
     assert config.rotors[2].ring_setting == 25
+
+
+def test_settings_to_str():
+    assert generate_settings_in_str(config) == "Ciphered with key: A00A00A00"
+    config.rotors[0].top_letter = "B"
+    config.rotors[1].ring_setting = 25
+    assert generate_settings_in_str(config) == "Ciphered with key: B00A25A00"

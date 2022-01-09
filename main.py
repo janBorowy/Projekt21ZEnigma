@@ -265,9 +265,9 @@ config.json file")
 
     def _save_cipher_directly(self):
         # load
-        str_settings = f'Ring settings: {str(self.config.rotors[2].ring_setting)} \
-{str(self.config.rotors[1].ring_setting)} \
-{str(self.config.rotors[0].ring_setting)} \
+        str_settings = f'Ring settings: {self.config.rotors[2].ring_setting} \
+{self.config.rotors[1].ring_setting} \
+{self.config.rotors[0].ring_setting} \
 Rotors: {self.config.rotors[2].top_letter} \
 {self.config.rotors[1].top_letter} \
 {self.config.rotors[0].top_letter}'

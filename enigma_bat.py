@@ -1,6 +1,9 @@
 from enigma_config_io import MissingConfigKeyError, read_config_from_json
 import enigma_cipher
 import json
+import sys
+from textwrap import wrap
+import os
 
 
 def validate_key(key):
@@ -37,8 +40,9 @@ def init_config(key, config_path):
         validate_key(key)
         received = receive_key(key)
     except IncorrectKeySpecifiedError:
-        print("Incorrect key specified. Key should consist only of uppercase letters\
-        and numbers as in examples: A00A00A00, G23D04E11")
+        print("Incorrect key specified. Key should consist only of uppercase letters \
+and numbers as in examples: A00A00A00, G23D04E11")
+        exit()
     letters = received[0]
     ring_settings = received[1]
     try:
@@ -50,35 +54,35 @@ def init_config(key, config_path):
             config.rotors[i].top_letter = letters[i]
             config.rotors[i].ring_setting = ring_settings[i]
     except ValueError:
-        print("config_bat.json file is corrupted,\
-            if the problem persists try deleting it")
+        print("config_bat.json file is corrupted, \
+if the problem persists try deleting it")
         exit()
     except MissingConfigKeyError:
-        print("config_bat.json file is missing data,\
-            if the problem persists try deleting it")
+        print("config_bat.json file is missing data, \
+if the problem persists try deleting it")
         exit()
     except FileNotFoundError:
-        print("config_bat.json couldn't be found,\
-            creating default settings file.")
+        print("config_bat.json couldn't be found, \
+creating default settings file.")
         create_default_config_file()
         with open('config_bat.json') as file_handle:
             config = read_config_from_json(file_handle)
     except enigma_cipher.InvalidLetterSettingSpecified:
         print("Invalid starting letter specified in \
-               config_bat.json file, even though this input \
-               is redundant")
+config_bat.json file, even though this input \
+is redundant")
         exit()
     except enigma_cipher.InvalidPlugboardError:
         print("Invalid plugboard setting specified in \
-                config.json file")
+config.json file")
         exit()
     except enigma_cipher.InvalidTurnoverSettingSpecified:
         print("Incorrect turnover setting specified in \
-                   config.json file")
+config.json file")
         exit()
     except enigma_cipher.InvalidWiringError:
         print("Incorrect wiring specified in \
-                             config.json file")
+config.json file")
         exit()
     return config
 
@@ -106,10 +110,59 @@ def create_default_config_file():
         file_handle.write(data)
 
 
+def cipher_file(file_handle, config):
+    data = file_handle.read().split("\n")
+    ciphertext = ''
+    for line in data:
+        line = enigma_cipher.transform_to_cipherable(line)
+        line = line + " "
+        ciphertext += enigma_cipher.\
+            cipher_string(config, line)
+    return ciphertext
+
+
+def generate_settings_in_str(config):
+    str_settings = f'Ciphered with key: \
+{config.rotors[0].top_letter}{config.rotors[0].ring_setting:02}\
+{config.rotors[1].top_letter}{config.rotors[1].ring_setting:02}\
+{config.rotors[2].top_letter}{config.rotors[2].ring_setting:02}'
+    return str_settings
+
+
+def save_ciphertext_to_file(file_handle, str_settings):
+    data = wrap(ciphertext, 79)
+    data_str = ""
+    for line in data:
+        data_str += line + "\n"
+    data_str += str_settings
+    file_handle.write(data_str)
+
+
 class IncorrectKeySpecifiedError(Exception):
     def __init__(self):
         super().__init__()
 
 
 if __name__ == "__main__":
-    pass
+    try:
+        key = sys.argv[1]
+        file_path = sys.argv[2]
+        file_name = os.path.basename(file_path)
+    except IndexError:
+        print("Input is missing an arugment. Please follow: \
+enigmacipher [key] [text file to cipher]")
+        exit()
+    config = init_config(key, 'config_bat.json')
+    str_settings = generate_settings_in_str(config)
+
+    # open file to cipher
+    try:
+        with open(file_path, 'r') as file_handle:
+            ciphertext = cipher_file(file_handle, config)
+    except FileNotFoundError:
+        print("Couldn't find file to cipher in specified path.")
+
+    # save ciphertext into file
+    with open(file_name+"_ciphered", 'w') as file_handle:
+        save_ciphertext_to_file(file_handle, str_settings)
+        print(f'successfully saved to {file_name}_ciphered')
