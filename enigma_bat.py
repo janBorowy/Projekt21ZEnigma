@@ -129,13 +129,13 @@ def generate_settings_in_str(config):
     return str_settings
 
 
-def save_ciphertext_to_file(file_handle, str_settings):
+def transform_ciphertext(ciphertext, str_settings):
     data = wrap(ciphertext, 79)
     data_str = ""
     for line in data:
         data_str += line + "\n"
-    data_str += str_settings
-    file_handle.write(data_str)
+    data_str += "\n" + str_settings
+    return data_str
 
 
 class IncorrectKeySpecifiedError(Exception):
@@ -163,7 +163,6 @@ enigmacipher [key] [text file to cipher]")
         print("Couldn't find file to cipher using path.")
         exit()
 
-    # save ciphertext into file
-    with open(file_name+"_ciphered", 'w') as file_handle:
-        save_ciphertext_to_file(file_handle, str_settings)
-        print(f'successfully ciphered and saved to {file_name}_ciphered')
+    ciphertext = transform_ciphertext(ciphertext, str_settings)
+
+    sys.stdout.write(ciphertext+"\n")
