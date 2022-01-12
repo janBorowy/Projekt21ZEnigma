@@ -1,4 +1,5 @@
 import string
+import re
 
 alphabet = string.ascii_uppercase
 
@@ -184,9 +185,11 @@ def create_plugboard_visual(plugs):
 
 def transform_to_cipherable(data):
     data = data.upper()
-    new_data = str()
+    data = data.replace('\n', ' ')
+    data = re.sub(' +', ' ', data)
+    new_data = ''
     for letter in data:
-        if letter in alphabet or letter in ['\n', ' ']:
+        if letter in alphabet+' ':
             new_data += letter
     return new_data
 

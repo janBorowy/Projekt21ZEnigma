@@ -3,7 +3,6 @@ import enigma_cipher
 import json
 import sys
 from textwrap import wrap
-import os
 
 
 def validate_key(key):
@@ -121,6 +120,12 @@ def cipher_file(file_handle, config):
     return ciphertext
 
 
+def cipher_text(plaintext, config):
+    plaintext = enigma_cipher.transform_to_cipherable(plaintext)
+    ciphertext = enigma_cipher.cipher_string(config, plaintext)
+    return ciphertext
+
+
 def generate_settings_in_str(config):
     str_settings = f'Ciphered with key: \
 {config.rotors[0].top_letter}{config.rotors[0].ring_setting:02}\
@@ -144,24 +149,37 @@ class IncorrectKeySpecifiedError(Exception):
 
 
 if __name__ == "__main__":
+    missing_input_msg = "Input is missing an arugment. Please follow: \
+enigmacipher [key] [text file to cipher] or \
+enter key and pipe the text file"
+    file_path = None
+
+    try:
+        file_path = sys.argv[2]
+    except IndexError:
+        if not sys.stdin.isatty():
+            plaintext = sys.stdin.read()
+        else:
+            print(missing_input_msg)
+            exit()
     try:
         key = sys.argv[1]
-        file_path = sys.argv[2]
-        file_name = os.path.basename(file_path)
     except IndexError:
-        print("Input is missing an arugment. Please follow: \
-enigmacipher [key] [text file to cipher]")
+        print(missing_input_msg)
         exit()
     config = init_config(key, 'config_bat.json')
     str_settings = generate_settings_in_str(config)
 
     # open file to cipher
-    try:
-        with open(file_path, 'r') as file_handle:
-            ciphertext = cipher_file(file_handle, config)
-    except FileNotFoundError:
-        print("Couldn't find file to cipher using path.")
-        exit()
+    if file_path:
+        try:
+            with open(file_path, 'r') as file_handle:
+                ciphertext = cipher_file(file_handle, config)
+        except FileNotFoundError:
+            print("Couldn't find file to cipher using path.")
+            exit()
+    else:
+        ciphertext = cipher_text(plaintext, config)
 
     ciphertext = transform_ciphertext(ciphertext, str_settings)
 

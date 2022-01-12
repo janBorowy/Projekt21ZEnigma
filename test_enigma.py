@@ -7,7 +7,7 @@ from enigma_cipher import InvalidWiringError, check_cipher_string,\
     map_left_to_right, map_plugboard, map_reflector,\
     map_right_to_left, transform_to_cipherable
 from enigma_classes import Rotor, Config
-from enigma_bat import IncorrectKeySpecifiedError, generate_settings_in_str,\
+from enigma_bat import IncorrectKeySpecifiedError,\
     validate_key, init_config, receive_key
 import enigma_config_io
 import pytest
