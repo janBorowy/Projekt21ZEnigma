@@ -5,8 +5,7 @@
  "rotorB_wiring": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
  "rotorB_turnover": "E",
  "rotorC_wiring": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
- "rotorC_starting_letter": "A",
  "rotorC_turnover": "V",
  "reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
- "plugs": [["A", "B"], ["C", "D"]]
+ "plugs": [["A", "B"], ["C", "D"], ["Q", "T"]]
 }

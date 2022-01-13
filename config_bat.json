@@ -1,13 +1,10 @@
 {
  "rotorA_wiring": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
- "rotorA_starting_letter": "A",
  "rotorA_turnover": "Q",
  "rotorB_wiring": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
- "rotorB_starting_letter": "A",
  "rotorB_turnover": "E",
  "rotorC_wiring": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
- "rotorC_starting_letter": "A",
  "rotorC_turnover": "V",
  "reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
- "plugs": []
+ "plugs": [["A", "B"], ["C", "D"], ["Q", "T"]]
 }

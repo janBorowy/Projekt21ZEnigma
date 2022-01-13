@@ -2,6 +2,7 @@ from enigma_config_io import MissingConfigKeyError, read_config_from_json
 import enigma_cipher
 import json
 import sys
+import argparse
 from textwrap import wrap
 
 
@@ -34,7 +35,7 @@ def receive_key(key):
     return letters, numbers
 
 
-def init_config(key, config_path):
+def init_config(key, config_file_path):
     try:
         validate_key(key)
         received = receive_key(key)
@@ -45,7 +46,7 @@ and numbers as in examples: A00A00A00, G23D04E11")
     letters = received[0]
     ring_settings = received[1]
     try:
-        with open(config_path) as file_handle:
+        with open(config_file_path) as file_handle:
             config = read_config_from_json(file_handle)
             if isinstance(file_handle, str):
                 json.loads(file_handle)
@@ -149,36 +150,40 @@ class IncorrectKeySpecifiedError(Exception):
 
 
 if __name__ == "__main__":
-    missing_input_msg = "Input is missing an arugment. Please follow: \
-enigmacipher [key] [text file to cipher] or \
-enter key and pipe the text file"
-    file_path = None
+    missing_input_msg = "No file to cipher or key specified."
 
-    try:
-        file_path = sys.argv[2]
-    except IndexError:
-        if not sys.stdin.isatty():
-            plaintext = sys.stdin.read()
-        else:
-            print(missing_input_msg)
-            exit()
-    try:
-        key = sys.argv[1]
-    except IndexError:
-        print(missing_input_msg)
-        exit()
+    parser = argparse.ArgumentParser(description="Cipher file using key")
+    parser.add_argument('-k', '--key', metavar='', help='Key \
+used to cipher the file. Must be in format: LNNLNNLNN, where L is a top \
+letter of the rotor and NN is a ringsetting.', required=True)
+    if not sys.stdin.isatty():
+        plaintext = sys.stdin.read()
+
+    parser.add_argument('-path', '--file_path', metavar='',
+                        type=str, help="file_path of the file to be ciphered")
+    parser.add_argument('-q', '--quiet', action='store_true',
+                        help='print quiet')
+
+    args = parser.parse_args()
+
+    key = args.key
+
     config = init_config(key, 'config_bat.json')
-    str_settings = generate_settings_in_str(config)
+    str_settings = generate_settings_in_str(config) if not args.quiet else ""
 
     # open file to cipher
-    if file_path:
+    if args.file_path:
+        file_path = args.file_path
         try:
             with open(file_path, 'r') as file_handle:
                 ciphertext = cipher_file(file_handle, config)
         except FileNotFoundError:
-            print("Couldn't find file to cipher using path.")
+            print("Couldn't find file to cipher using file_path.")
             exit()
     else:
+        if sys.stdin.isatty():
+            print(missing_input_msg)
+            exit()
         ciphertext = cipher_text(plaintext, config)
 
     ciphertext = transform_ciphertext(ciphertext, str_settings)
