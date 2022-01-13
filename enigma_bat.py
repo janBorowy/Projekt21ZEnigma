@@ -160,7 +160,8 @@ letter of the rotor and NN is a ringsetting.', required=True)
         plaintext = sys.stdin.read()
 
     parser.add_argument('-path', '--file_path', metavar='',
-                        type=str, help="file_path of the file to be ciphered")
+                        type=str, help="File_path of the file to be ciphered. \
+this variable is prioritized over pipe.")
     parser.add_argument('-q', '--quiet', action='store_true',
                         help='print quiet')
 
