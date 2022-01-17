@@ -8,7 +8,7 @@ from textwrap import wrap
 
 def validate_key(key):
     # Only validates if key is a valid string.
-    # Doesn't validate if key values specified are valid
+    # Doesn't validate key values
     if not isinstance(key, str):
         raise IncorrectKeySpecifiedError
     if not len(key) == 9:
