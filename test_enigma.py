@@ -8,7 +8,8 @@ from enigma_cipher import InvalidWiringError, check_cipher_string,\
     map_right_to_left, transform_to_cipherable
 from enigma_classes import Rotor, Config
 from enigma_bat import IncorrectKeySpecifiedError,\
-    validate_key, init_config, receive_key
+    validate_key, receive_key
+import io
 import enigma_config_io
 import pytest
 
@@ -343,9 +344,27 @@ def test_cipher_string():
 
 
 def test_read_config_from_json():
+    settings = '{\
+"rotorA_wiring": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",\
+"rotorA_starting_letter": "A",\
+"rotorA_turnover": "Q",\
+\
+"rotorB_wiring": "AJDKSIRUXBLHWTMCQGZNPYFVOE",\
+"rotorB_starting_letter": "A",\
+"rotorB_turnover": "E",\
+\
+"rotorC_wiring": "BDFHJLCPRTXVZNYEIWGAKMUSQO",\
+"rotorC_starting_letter": "A",\
+"rotorC_turnover": "V",\
+\
+"reflector_map": "YRUHQSLDPXNGOKMIEBFZCWVJAT",\
+\
+"plugs": [["A", "Z"], ["C", "F"], ["P", "B"], ["K", "E"],\
+            ["U", "G"], ["W", "N"], ["X", "Y"]]\
+}'
 
-    with open('test_config.json', 'r') as file_handle:
-        config = enigma_config_io.read_config_from_json(file_handle)
+    file_handle = io.StringIO(settings)
+    config = enigma_config_io.read_config_from_json(file_handle)
 
     assert config.rotors[0].wiring == "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
     assert config.rotors[0].top_letter == "A"
@@ -407,33 +426,3 @@ def test_receive_key():
         receive_key("A000A00A00")
     with pytest.raises(IncorrectKeySpecifiedError):
         receive_key("A00ABCA00")
-
-
-def test_init_bat_config():
-    config = init_config("A14B25C01", 'test_config_bat.json')
-    assert config.rotors[0].wiring == "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    assert config.rotors[1].wiring == "AJDKSIRUXBLHWTMCQGZNPYFVOE"
-    assert config.rotors[2].wiring == "BDFHJLCPRTXVZNYEIWGAKMUSQO"
-    assert config.rotors[0].turnover == "Q"
-    assert config.rotors[1].turnover == "E"
-    assert config.rotors[2].turnover == "V"
-    assert config.reflector_map == "YRUHQSLDPXNGOKMIEBFZCWVJAT"
-    assert config.plugs == [("A", "Z"), ("C", "F"),
-                            ("P", "B"), ("K", "E"),
-                            ("U", "G"), ("W", "N"), ("X", "Y")]
-
-    assert config.rotors[0].top_letter == "A"
-    assert config.rotors[1].top_letter == "B"
-    assert config.rotors[2].top_letter == "C"
-    assert config.rotors[0].ring_setting == 14
-    assert config.rotors[1].ring_setting == 25
-    assert config.rotors[2].ring_setting == 1
-
-    config = init_config("Z00Q04E25", 'test_config_bat.json')
-
-    assert config.rotors[0].top_letter == "Z"
-    assert config.rotors[1].top_letter == "Q"
-    assert config.rotors[2].top_letter == "E"
-    assert config.rotors[0].ring_setting == 0
-    assert config.rotors[1].ring_setting == 4
-    assert config.rotors[2].ring_setting == 25

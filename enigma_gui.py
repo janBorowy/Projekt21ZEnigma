@@ -18,7 +18,7 @@ class enigmaAppWindow(QMainWindow):
 
 # Reading config
         try:
-            with open('config.json') as file_handle:
+            with open('config_gui.json') as file_handle:
                 self.config = enigma_config_io.\
                     read_config_from_json(file_handle)
                 if isinstance(file_handle, str):
@@ -38,7 +38,7 @@ If the error persists, try deleting it.")
                                     "config.json file not found, \
 creating default")
             self._create_default_config_file()
-            with open('config.json') as file_handle:
+            with open('config_gui.json') as file_handle:
                 self.config = enigma_config_io.\
                     read_config_from_json(file_handle)
         except enigma_cipher.InvalidLetterSettingSpecified:
@@ -321,7 +321,7 @@ Rotors: {self.config.rotors[2].top_letter} \
 
             "plugs": []
         }
-        with open('config.json', 'w') as file_handle:
+        with open('config_gui.json', 'w') as file_handle:
             data = json.dumps(data, indent=1)
             file_handle.write(data)
 

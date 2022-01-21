@@ -150,7 +150,7 @@ class IncorrectKeySpecifiedError(Exception):
 
 
 if __name__ == "__main__":
-    missing_input_msg = "No file to cipher or key specified."
+    missing_input_msg = "No file to cipher specified."
 
     parser = argparse.ArgumentParser(description="Cipher file using key")
     parser.add_argument('-k', '--key', metavar='', help='Key \
