@@ -47,12 +47,14 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setItalic(False)
         self.button_G.setFont(font)
+        self.button_G.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_G, 1, 10, 1, 2)
 
         self.button_K = enigmaCipheringButton(self.centralwidget)
         self.button_K.setObjectName(u"button_K")
         self.button_K.setFont(font)
+        self.button_K.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_K, 1, 16, 1, 2)
 
@@ -60,24 +62,28 @@ class Ui_MainWindow(object):
         self.button_R.setObjectName(u"button_R")
         self.button_R.setEnabled(True)
         self.button_R.setFont(font)
+        self.button_R.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_R, 0, 7, 1, 2)
 
         self.button_F = enigmaCipheringButton(self.centralwidget)
         self.button_F.setObjectName(u"button_F")
         self.button_F.setFont(font)
+        self.button_F.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_F, 1, 8, 1, 2)
 
         self.button_C = enigmaCipheringButton(self.centralwidget)
         self.button_C.setObjectName(u"button_C")
         self.button_C.setFont(font)
+        self.button_C.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_C, 2, 7, 1, 2)
 
         self.button_D = enigmaCipheringButton(self.centralwidget)
         self.button_D.setObjectName(u"button_D")
         self.button_D.setFont(font)
+        self.button_D.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_D, 1, 6, 1, 2)
 
@@ -92,6 +98,7 @@ class Ui_MainWindow(object):
         self.button_S = enigmaCipheringButton(self.centralwidget)
         self.button_S.setObjectName(u"button_S")
         self.button_S.setFont(font)
+        self.button_S.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_S, 1, 4, 1, 2)
 
@@ -104,6 +111,7 @@ class Ui_MainWindow(object):
         self.button_P.setSizePolicy(sizePolicy)
         self.button_P.setMaximumSize(QSize(16777215, 16777215))
         self.button_P.setFont(font)
+        self.button_P.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_P, 2, 1, 1, 2)
 
@@ -111,6 +119,7 @@ class Ui_MainWindow(object):
         self.button_E.setObjectName(u"button_E")
         self.button_E.setEnabled(True)
         self.button_E.setFont(font)
+        self.button_E.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_E, 0, 5, 1, 2)
 
@@ -121,6 +130,7 @@ class Ui_MainWindow(object):
         self.button_Q.setSizePolicy(sizePolicy)
         self.button_Q.setMaximumSize(QSize(16777215, 16777215))
         self.button_Q.setFont(font)
+        self.button_Q.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_Q, 0, 1, 1, 2)
 
@@ -128,12 +138,14 @@ class Ui_MainWindow(object):
         self.button_Z.setObjectName(u"button_Z")
         self.button_Z.setEnabled(True)
         self.button_Z.setFont(font)
+        self.button_Z.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_Z, 0, 11, 1, 2)
 
         self.button_H = enigmaCipheringButton(self.centralwidget)
         self.button_H.setObjectName(u"button_H")
         self.button_H.setFont(font)
+        self.button_H.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_H, 1, 12, 1, 2)
 
@@ -141,12 +153,14 @@ class Ui_MainWindow(object):
         self.button_U.setObjectName(u"button_U")
         self.button_U.setEnabled(True)
         self.button_U.setFont(font)
+        self.button_U.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_U, 0, 13, 1, 2)
 
         self.button_A = enigmaCipheringButton(self.centralwidget)
         self.button_A.setObjectName(u"button_A")
         self.button_A.setFont(font)
+        self.button_A.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_A, 1, 2, 1, 2)
 
@@ -155,6 +169,7 @@ class Ui_MainWindow(object):
         self.button_I.setEnabled(True)
         self.button_I.setMaximumSize(QSize(16777215, 16777215))
         self.button_I.setFont(font)
+        self.button_I.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_I, 0, 15, 1, 2)
 
@@ -163,24 +178,28 @@ class Ui_MainWindow(object):
         self.button_O.setEnabled(True)
         self.button_O.setMaximumSize(QSize(100, 16777215))
         self.button_O.setFont(font)
+        self.button_O.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_O, 0, 17, 1, 2)
 
         self.button_V = enigmaCipheringButton(self.centralwidget)
         self.button_V.setObjectName(u"button_V")
         self.button_V.setFont(font)
+        self.button_V.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_V, 2, 9, 1, 2)
 
         self.button_N = enigmaCipheringButton(self.centralwidget)
         self.button_N.setObjectName(u"button_N")
         self.button_N.setFont(font)
+        self.button_N.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_N, 2, 13, 1, 2)
 
         self.button_Y = enigmaCipheringButton(self.centralwidget)
         self.button_Y.setObjectName(u"button_Y")
         self.button_Y.setFont(font)
+        self.button_Y.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_Y, 2, 3, 1, 2)
 
@@ -191,12 +210,14 @@ class Ui_MainWindow(object):
         self.button_X = enigmaCipheringButton(self.centralwidget)
         self.button_X.setObjectName(u"button_X")
         self.button_X.setFont(font)
+        self.button_X.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_X, 2, 5, 1, 2)
 
         self.button_B = enigmaCipheringButton(self.centralwidget)
         self.button_B.setObjectName(u"button_B")
         self.button_B.setFont(font)
+        self.button_B.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_B, 2, 11, 1, 2)
 
@@ -204,6 +225,7 @@ class Ui_MainWindow(object):
         self.button_L.setObjectName(u"button_L")
         self.button_L.setMaximumSize(QSize(100, 16777215))
         self.button_L.setFont(font)
+        self.button_L.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_L, 2, 17, 1, 2)
 
@@ -211,6 +233,7 @@ class Ui_MainWindow(object):
         self.button_T.setObjectName(u"button_T")
         self.button_T.setEnabled(True)
         self.button_T.setFont(font)
+        self.button_T.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_T, 0, 9, 1, 2)
 
@@ -221,6 +244,7 @@ class Ui_MainWindow(object):
         self.button_J = enigmaCipheringButton(self.centralwidget)
         self.button_J.setObjectName(u"button_J")
         self.button_J.setFont(font)
+        self.button_J.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_J, 1, 14, 1, 2)
 
@@ -228,12 +252,14 @@ class Ui_MainWindow(object):
         self.button_W.setObjectName(u"button_W")
         self.button_W.setEnabled(True)
         self.button_W.setFont(font)
+        self.button_W.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_W, 0, 3, 1, 2)
 
         self.button_M = enigmaCipheringButton(self.centralwidget)
         self.button_M.setObjectName(u"button_M")
         self.button_M.setFont(font)
+        self.button_M.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout.addWidget(self.button_M, 2, 15, 1, 2)
 
@@ -251,6 +277,7 @@ class Ui_MainWindow(object):
         self.ring_setting_B_advance = QPushButton(self.centralwidget)
         self.ring_setting_B_advance.setObjectName(u"ring_setting_B_advance")
         self.ring_setting_B_advance.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_B_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_B_advance, 0, 16, 1, 1)
 
@@ -260,12 +287,14 @@ class Ui_MainWindow(object):
         font1 = QFont()
         font1.setPointSize(12)
         self.rotor_B_regress.setFont(font1)
+        self.rotor_B_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_B_regress, 1, 18, 1, 1)
 
         self.ring_setting_A_advance = QPushButton(self.centralwidget)
         self.ring_setting_A_advance.setObjectName(u"ring_setting_A_advance")
         self.ring_setting_A_advance.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_A_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_A_advance, 0, 26, 1, 1)
 
@@ -283,6 +312,7 @@ class Ui_MainWindow(object):
         self.ring_setting_C_advance = QPushButton(self.centralwidget)
         self.ring_setting_C_advance.setObjectName(u"ring_setting_C_advance")
         self.ring_setting_C_advance.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_C_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_C_advance, 0, 6, 1, 1)
 
@@ -301,12 +331,14 @@ class Ui_MainWindow(object):
         self.rotor_A_regress.setObjectName(u"rotor_A_regress")
         self.rotor_A_regress.setMaximumSize(QSize(20, 16777215))
         self.rotor_A_regress.setFont(font1)
+        self.rotor_A_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_A_regress, 1, 28, 1, 1)
 
         self.ring_setting_C_regress = QPushButton(self.centralwidget)
         self.ring_setting_C_regress.setObjectName(u"ring_setting_C_regress")
         self.ring_setting_C_regress.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_C_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_C_regress, 0, 5, 1, 1)
 
@@ -314,6 +346,7 @@ class Ui_MainWindow(object):
         self.rotor_C_regress.setObjectName(u"rotor_C_regress")
         self.rotor_C_regress.setMaximumSize(QSize(20, 16777215))
         self.rotor_C_regress.setFont(font1)
+        self.rotor_C_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_C_regress, 1, 8, 1, 1)
 
@@ -331,12 +364,14 @@ class Ui_MainWindow(object):
         self.ring_setting_A_regress = QPushButton(self.centralwidget)
         self.ring_setting_A_regress.setObjectName(u"ring_setting_A_regress")
         self.ring_setting_A_regress.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_A_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_A_regress, 0, 25, 1, 1)
 
         self.rotor_B_advance = QPushButton(self.centralwidget)
         self.rotor_B_advance.setObjectName(u"rotor_B_advance")
         self.rotor_B_advance.setMaximumSize(QSize(20, 16777215))
+        self.rotor_B_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_B_advance, 0, 18, 1, 1)
 
@@ -361,6 +396,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.rotor_A_advance.sizePolicy().hasHeightForWidth())
         self.rotor_A_advance.setSizePolicy(sizePolicy1)
         self.rotor_A_advance.setMaximumSize(QSize(20, 16777215))
+        self.rotor_A_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_A_advance, 0, 28, 1, 1)
 
@@ -375,12 +411,14 @@ class Ui_MainWindow(object):
         self.rotor_C_advance = QPushButton(self.centralwidget)
         self.rotor_C_advance.setObjectName(u"rotor_C_advance")
         self.rotor_C_advance.setMaximumSize(QSize(20, 16777215))
+        self.rotor_C_advance.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.rotor_C_advance, 0, 8, 1, 1)
 
         self.ring_setting_B_regress = QPushButton(self.centralwidget)
         self.ring_setting_B_regress.setObjectName(u"ring_setting_B_regress")
         self.ring_setting_B_regress.setMaximumSize(QSize(30, 16777215))
+        self.ring_setting_B_regress.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_3.addWidget(self.ring_setting_B_regress, 0, 15, 1, 1)
 
@@ -419,12 +457,14 @@ class Ui_MainWindow(object):
         font3 = QFont()
         font3.setPointSize(18)
         self.CipherTextBrowser.setFont(font3)
+        self.CipherTextBrowser.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_7.addWidget(self.CipherTextBrowser)
 
         self.PlainTextBrowser = QTextBrowser(self.centralwidget)
         self.PlainTextBrowser.setObjectName(u"PlainTextBrowser")
         self.PlainTextBrowser.setFont(font3)
+        self.PlainTextBrowser.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_7.addWidget(self.PlainTextBrowser)
 
@@ -438,6 +478,7 @@ class Ui_MainWindow(object):
         self.reset_button = QPushButton(self.centralwidget)
         self.reset_button.setObjectName(u"reset_button")
         self.reset_button.setMaximumSize(QSize(50, 16777215))
+        self.reset_button.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_5.addWidget(self.reset_button, 2, 5, 1, 1)
 
@@ -538,6 +579,7 @@ class Ui_MainWindow(object):
         self.clear_button = QPushButton(self.centralwidget)
         self.clear_button.setObjectName(u"clear_button")
         self.clear_button.setMaximumSize(QSize(50, 16777215))
+        self.clear_button.setFocusPolicy(Qt.NoFocus)
 
         self.gridLayout_5.addWidget(self.clear_button, 2, 4, 1, 1)
 
@@ -774,6 +816,48 @@ class Ui_MainWindow(object):
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        QWidget.setTabOrder(self.button_space, self.button_P)
+        QWidget.setTabOrder(self.button_P, self.button_Y)
+        QWidget.setTabOrder(self.button_Y, self.button_X)
+        QWidget.setTabOrder(self.button_X, self.button_C)
+        QWidget.setTabOrder(self.button_C, self.button_V)
+        QWidget.setTabOrder(self.button_V, self.button_B)
+        QWidget.setTabOrder(self.button_B, self.button_N)
+        QWidget.setTabOrder(self.button_N, self.button_M)
+        QWidget.setTabOrder(self.button_M, self.button_L)
+        QWidget.setTabOrder(self.button_L, self.button_A)
+        QWidget.setTabOrder(self.button_A, self.button_S)
+        QWidget.setTabOrder(self.button_S, self.button_D)
+        QWidget.setTabOrder(self.button_D, self.button_F)
+        QWidget.setTabOrder(self.button_F, self.button_G)
+        QWidget.setTabOrder(self.button_G, self.button_H)
+        QWidget.setTabOrder(self.button_H, self.button_J)
+        QWidget.setTabOrder(self.button_J, self.button_K)
+        QWidget.setTabOrder(self.button_K, self.button_Q)
+        QWidget.setTabOrder(self.button_Q, self.button_W)
+        QWidget.setTabOrder(self.button_W, self.button_E)
+        QWidget.setTabOrder(self.button_E, self.button_R)
+        QWidget.setTabOrder(self.button_R, self.button_T)
+        QWidget.setTabOrder(self.button_T, self.button_Z)
+        QWidget.setTabOrder(self.button_Z, self.button_U)
+        QWidget.setTabOrder(self.button_U, self.button_I)
+        QWidget.setTabOrder(self.button_I, self.button_O)
+        QWidget.setTabOrder(self.button_O, self.ring_setting_C_regress)
+        QWidget.setTabOrder(self.ring_setting_C_regress, self.ring_setting_C_advance)
+        QWidget.setTabOrder(self.ring_setting_C_advance, self.rotor_C_advance)
+        QWidget.setTabOrder(self.rotor_C_advance, self.rotor_C_regress)
+        QWidget.setTabOrder(self.rotor_C_regress, self.ring_setting_B_regress)
+        QWidget.setTabOrder(self.ring_setting_B_regress, self.ring_setting_B_advance)
+        QWidget.setTabOrder(self.ring_setting_B_advance, self.rotor_B_advance)
+        QWidget.setTabOrder(self.rotor_B_advance, self.rotor_B_regress)
+        QWidget.setTabOrder(self.rotor_B_regress, self.ring_setting_A_regress)
+        QWidget.setTabOrder(self.ring_setting_A_regress, self.ring_setting_A_advance)
+        QWidget.setTabOrder(self.ring_setting_A_advance, self.rotor_A_advance)
+        QWidget.setTabOrder(self.rotor_A_advance, self.rotor_A_regress)
+        QWidget.setTabOrder(self.rotor_A_regress, self.clear_button)
+        QWidget.setTabOrder(self.clear_button, self.reset_button)
+        QWidget.setTabOrder(self.reset_button, self.PlainTextBrowser)
+        QWidget.setTabOrder(self.PlainTextBrowser, self.CipherTextBrowser)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.action_open)

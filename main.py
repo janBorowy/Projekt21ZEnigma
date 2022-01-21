@@ -326,9 +326,6 @@ Rotors: {self.config.rotors[2].top_letter} \
             file_handle.write(data)
 
     def keyPressEvent(self, event):
-        if event.key() == 16777248:
-            self._input_space()
-            return
         if event.text().isalpha():
             letter = str.upper(event.text())
             self._update_ciphertext_browser(letter)
