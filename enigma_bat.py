@@ -155,15 +155,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Cipher file using key")
     parser.add_argument('-k', '--key', metavar='', help='Key \
 used to cipher the file. Must be in format: LNNLNNLNN, where L is a top \
-letter of the rotor and NN is a ringsetting.', required=True)
+letter of the rotor and NN is a ringsetting', required=True)
     if not sys.stdin.isatty():
         plaintext = sys.stdin.read()
 
-    parser.add_argument('-path', '--file_path', metavar='',
-                        type=str, help="File_path of the file to be ciphered. \
-this variable is prioritized over pipe.")
+    parser.add_argument('-p', '--path', metavar='',
+                        type=str, help="Path of the file to be ciphered. \
+this variable is prioritized over pipe")
     parser.add_argument('-q', '--quiet', action='store_true',
-                        help='print quiet')
+                        help='print without key')
 
     args = parser.parse_args()
 
@@ -173,13 +173,13 @@ this variable is prioritized over pipe.")
     str_settings = generate_settings_in_str(config) if not args.quiet else ""
 
     # open file to cipher
-    if args.file_path:
-        file_path = args.file_path
+    if args.path:
+        file_path = args.path
         try:
             with open(file_path, 'r') as file_handle:
                 ciphertext = cipher_file(file_handle, config)
         except FileNotFoundError:
-            print("Couldn't find file to cipher using file_path.")
+            print("Couldn't find file to cipher using specified path.")
             exit()
     else:
         if sys.stdin.isatty():
